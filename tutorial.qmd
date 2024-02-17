@@ -113,7 +113,7 @@ embed-resources: true
 # Es gibt zwei Wege einer Variable einen Wert zuzuweisen:
 Nummer <- 3
 Nummer = 3
-# = und <- haben die gleiche Funktion
+# = und <- haben in diesem Fall die gleiche Funktion
 
 
 # Um das Ergebnis spaeter aufzurufen, muss lediglich der Variablenname ausgefuehrt werden
@@ -152,6 +152,10 @@ Logical <- FALSE
 
 Logical
 ```
+
+##
+- Fuer Interessierte: Mehr Informationen zu Datentypen gibt es hier (Kapitel 3.6 fuer dataframes): </br>
+[Advanced R - Vectors](https://adv-r.hadley.nz/vectors-chap.html){target="_blank"}
 
 # R-Funktionen
 
@@ -299,13 +303,247 @@ MyMatrix - 1
 
 # Ich kann alle Berechnungen in einer neuen Variable speichern
 MyNewMatrix <- MyMatrix + 3
+MyNewMatrix
+```
+
+## Dataframes
+
+```{r}
+MyNewMatrix
 class(MyNewMatrix)
 
 # Wenn man mit (Forschungs-)Datensaetzen arbeitet, bietet es sich meistens an diese als dataframe 
 # zu speichern, da bei der Matrix-Klasse alle Werte die gleiche Datenklasse haben muessen
 MyNewMatrix <- data.frame(MyNewMatrix)
 class(MyNewMatrix)
+
+# Bei dataframes kann jede Spalte eine eigene Datenklasse haben
 ```
 
-##
-- Fuer Interessierte: Mehr Informationen zu Datentypen gibt es hier (Kapitel 3.6 fuer dataframes): https://adv-r.hadley.nz/vectors-chap.html
+## Dataframes erstellen
+
+```{r}
+# Hier erstellen wir einen dataframe mit drei Spalten: x, y und z
+# Spalte x hat die Klasse numeric (bedeutet 1 bis 3)
+# Spalte y hat die Klasse character
+# Spalte z hat die Klasse logical
+my_df <- data.frame(
+  x = 1:3,
+  y = c("a", "b", "c"),
+  z = c(T,F,F)
+)
+
+my_df
+```
+
+## Data.frames erstellen
+
+```{r}
+# Alternativ ginge es auch so:
+x <- 1:3
+y <- c("a", "b", "c")
+z <- c(T,F,F)
+
+my_df <- data.frame(x,y,z)
+my_df
+```
+
+## Arbeiten mit data.frames
+
+```{r}
+# Mit eckigen Klammern kann ich auch spezifische Elemente eines dataframes adressieren
+# Zeilen und Spalten werden dabei mit einem Komma getrennt: [Zeile, Spalte]
+# Die Zeilen und Spalten sind dafuer durchnummeriert
+my_df[1,2]
+
+# Wenn ich einen der Werte leer lasse, bekomme ich die komplette Zeile oder Spalte ausgegeben
+my_df[1,]
+my_df[,2]
+```
+
+## Arbeiten mit data.frames
+
+```{r}
+# Wenn Spalten und/oder Zeilen benannt sind, können auch die Namen verwendet werden
+# Wir haben die Spalten mit x, y und z benannt, die Zeilen haben keine Namen
+my_df[1,"x"]
+
+# Wenn man mehrere Zeilen oder Spalten auf einmal aufrufen möchte, muss
+# man wieder die combine-Funktion verwenden
+my_df[c(1,2), c("x","y")]
+
+# Um benannte Spalten einzeln aufzurufen, gibt es noch den $ Operator
+my_df$x
+# entspricht:
+my_df[,"x"]
+```
+
+## Arbeiten mit data.frames
+
+```{r}
+#| warning: true
+# Hier kriegen wir einen Warnhinweis:
+mean(my_df)
+
+# Aber wenn wir nur die numerische Spalte verwenden, funktioniert es:
+mean(my_df[,"x"])
+
+# Was könnte der Wert bei logischen Daten bedeuten?
+mean(my_df[,"z"])
+```
+
+# Übungsaufgaben
+
+## Datensatz
+
+```{r}
+# Jetzt erstellen wir einen Übungsdatensatz:
+names <- c("Robert", "Christian", "Nancy", "Annalena", "Marco", "Hubertus", "Boris", "Cem", "Lisa", "Karl", "Volker", "Steffi", "Bettina", "Svenja", "Klara", "Wolfgang")
+gender = factor(c("m", "m", "w", "w", "m", "m", "m", "m", "w", "m", "m", "w", "w", "w", "w", "m"))
+age = c(54, 44, 53, 43, 46, 51, 63, 58, 55, 60, 53, 55, 55, 55, 47, 53)
+
+# Die IQ-Werte werden anhand einer Normalverteilung zufällig generiert
+# Indem wir den seed festlegen, bekommen wir alle die gleichen Zufallszahlen
+set.seed(3425)
+iq = rnorm(16, mean = 100, sd = 15)
+
+# Jetzt erstellen wir den data.frame
+sample_data <- data.frame(names,gender,age,iq)
+
+```
+
+## Die Aufgaben
+
+1. Berechnet das Durchschnittsalter und den Durchschnitts-IQ für unseren Datensatz
+2. Die table()-Funktion hilft Häufigkeiten auszuzählen. Zählt die Anzahl der männlichen und weiblichen Personen aus. Schaut euch, wenn nötig, die Hilfeseite der table()-Funktion.
+
+## Die Lösung
+
+```{r}
+#| echo: false
+
+mean(sample_data[,"age"])
+mean(sample_data[,"iq"])
+
+table(sample_data[,"gender"])
+
+```
+
+# Bibliotheken / Packages
+
+## Bibliotheken / Packages
+
+- Bibliotheken sind Sammlungen von R-Funktionen, Datensätzen und Code, die die Funktionalität von base R erweitern 
+
+- Bibliotheken müssen zunächst pro System einmal installiert werden
+
+- Anschließend können sie geladen und dann genutzt werden
+
+## Beispielbibliothek: psych
+
+- Die psych-Bibliothek beinhaltet verschiedenste Funktionen für die Datenauswertung, Ausreißeranalyse und zur Test- und Fragebogenkonstruktion (Faktorenanalyse, Cronbach's Alpha, etc.)
+
+```{r}
+#| eval: false
+# Bei der ersten Nutzung muss die Bibliothek zunächst installiert werden:
+install.packages("psych")
+
+# Um die Bibliothek zu nutzen, muss sie dann in jeder R-Instanz neu geladen werden
+library(psych)
+```
+
+- Unter <https://personality-project.org/r/psych/> kann man weitere Informationen zur psych-Bibliothek finden
+
+## Beispielbibliothek: psych
+
+```{r}
+#| echo: false
+#| output: false
+library(psych)
+```
+
+```{r}
+# Die describe-Funktion bietet einen Überblick über verschiedene Kennwerte der Variablen des Datensatzes
+describe(sample_data)
+
+# Die violin-Funktion erstellt Violin-plots
+violin(age ~ gender, data = sample_data)
+```
+
+# Itemanalyse nach KTT mit der psych-Bibliothek
+
+## Datenfile runterladen
+
+</br>
+</br>
+[Hier klicken um den Datensatz runterzuladen](Daten Fragebogen.csv){target="_blank"}
+
+## Einen Datensatz laden
+
+```{r}
+# Durch das R-Projekt weiß in welchem Ordner es nach der Datei suchen muss
+# Mit der read()-Funktion können wir einen Datensatz aus einer csv-Datei einlesen
+fb_data <- read.csv2("Daten Fragebogen.csv")
+
+# Die head()-Funktion ermöglicht uns einen Überblick über die Variablen im Datensatz
+head(fb_data)
+
+# Was beinhaltet der Datensatz?
+```
+
+## Die Skalen
+
+[Hier klicken um die Skalen runterzuladen](dateien/Skalen SPQ.pdf){target="_blank"}
+
+<iframe src="dateien/Skalen SPQ.pdf" height="500" width="500"></iframe>
+
+## Die Itemanalyse (nach klassischer Testtheorie)
+
+```{r}
+# Berechnung der Skala Odd Believes & Magical Thinking - Items 3, 12, 21, 30, 39, 47, 55
+
+# Zunächst schauen wir uns mit Hilfe der alpha()-Funktion aus der psych-Bibliothek 
+# das Cronbach's Alpha und weitere Parameter für die Itemanalyse an
+alpha(fb_data[,c("spq3", "spq12", "spq21", "spq30", "spq39", "spq47", "spq55")])
+```
+
+## Einen Skalenmittelwert berechnen
+
+```{r}
+# Die rowMeans()-Funktion berechnet zeilenweise den Mittelwert für den Datensatz im Eingabeargument
+# Diese Datenreihe von Mittelwerten wird dann als neue Spalte OBMT in unserem Datensatz gespeichert
+fb_data[,"OBMT"] <- rowMeans(fb_data[,c("spq3", "spq12", "spq21", "spq30", "spq39", "spq47", "spq55")], na.rm = T)
+
+fb_data[,"OBMT"]
+```
+
+## Übungsaufgabe
+
+1. Berechnet das Cronbach's Alpha für die Excessive Social Anxiety Skala
+
+2. Berechnet den *Skalen*mittelwert der Excessive Social Anxiety Skala für jede einzelne Person
+
+3. Berechnet den *Stichproben*mittelwert für die Excessive Social Anxiety Skala
+
+## Lösung 1
+
+```{r}
+#| echo: false
+alpha(fb_data[,c("spq2", "spq11", "spq20", "spq29", "spq38", "spq46", "spq54", "spq71")])
+```
+
+## Lösung 2
+
+```{r}
+#| echo: false
+fb_data[,"ESA"] <- rowMeans(fb_data[,c("spq2", "spq11", "spq20", "spq29", "spq38", "spq46", "spq54", "spq71")], na.rm = T)
+
+fb_data[,"ESA"]
+```
+
+## Lösung 3
+
+```{r}
+#| echo: false
+mean(fb_data[,"ESA"])
+```

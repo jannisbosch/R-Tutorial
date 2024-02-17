@@ -255,6 +255,8 @@ gender = factor(c("m", "w", "m", "w"))
 age = c(35, 19, 28, 55)
 points = c(19, 12, 5, 10)
 
+data.frame(names,gender,age,points)
+
 # Aufgabe 1: Erstelle einen dataframe mit cbind(), der die Variablen names, gender, age und points als 
 # Spalten beinhaltet
 
