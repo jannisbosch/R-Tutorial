@@ -2138,6 +2138,209 @@ F-statistic: 0.6885 on 1 and 164 DF,  p-value: 0.4079</code></pre>
 <span id="cb58-3"><a href="#cb58-3"></a><span class="co"># Abstand jeder Gruppe vom Intercept (es ist also genau halb so groß</span></span>
 <span id="cb58-4"><a href="#cb58-4"></a><span class="co"># wie im vorherigen Beispiel)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
+<section id="übungsaufgaben" class="slide level2">
+<h2>Übungsaufgaben</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1"></a><span class="co"># Das ist euer Übungsdatensatz</span></span>
+<span id="cb59-2"><a href="#cb59-2"></a>PlantGrowth <span class="ot">&lt;-</span> PlantGrowth</span>
+<span id="cb59-3"><a href="#cb59-3"></a>PlantGrowth</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   weight group
+1    4.17  ctrl
+2    5.58  ctrl
+3    5.18  ctrl
+4    6.11  ctrl
+5    4.50  ctrl
+6    4.61  ctrl
+7    5.17  ctrl
+8    4.53  ctrl
+9    5.33  ctrl
+10   5.14  ctrl
+11   4.81  trt1
+12   4.17  trt1
+13   4.41  trt1
+14   3.59  trt1
+15   5.87  trt1
+16   3.83  trt1
+17   6.03  trt1
+18   4.89  trt1
+19   4.32  trt1
+20   4.69  trt1
+21   6.31  trt2
+22   5.12  trt2
+23   5.54  trt2
+24   5.50  trt2
+25   5.37  trt2
+26   5.29  trt2
+27   4.92  trt2
+28   6.15  trt2
+29   5.80  trt2
+30   5.26  trt2</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1"></a><span class="do">## Aufgabe 1:</span></span>
+<span id="cb61-2"><a href="#cb61-2"></a><span class="co"># Erstellt eine Tabelle mit der Gruppenaufteilung</span></span>
+<span id="cb61-3"><a href="#cb61-3"></a><span class="co"># Hint: table()</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="übungsaufgaben-1" class="slide level2">
+<h2>Übungsaufgaben</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1"></a><span class="do">## Aufgabe 1:</span></span>
+<span id="cb62-2"><a href="#cb62-2"></a><span class="co"># Erstellt eine Tabelle mit der Gruppenaufteilung</span></span>
+<span id="cb62-3"><a href="#cb62-3"></a><span class="co"># Hint: table()</span></span>
+<span id="cb62-4"><a href="#cb62-4"></a></span>
+<span id="cb62-5"><a href="#cb62-5"></a><span class="co"># Lösung:</span></span>
+<span id="cb62-6"><a href="#cb62-6"></a><span class="fu">table</span>(PlantGrowth[,<span class="st">&quot;group&quot;</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ctrl trt1 trt2 
+  10   10   10 </code></pre>
+</div>
+</div>
+</section>
+<section id="übungsaufgaben-2" class="slide level2">
+<h2>Übungsaufgaben</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1"></a><span class="do">## Aufgabe 2:</span></span>
+<span id="cb64-2"><a href="#cb64-2"></a><span class="co"># Bestimmt das Durchschnittsgewicht der Gesamtgruppe und</span></span>
+<span id="cb64-3"><a href="#cb64-3"></a><span class="co"># der drei Untersuchungsgruppen.</span></span>
+<span id="cb64-4"><a href="#cb64-4"></a><span class="co"># Hint: describeBy() oder komplizierter: subset()/filter() und mean()/describe()</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="übungsaufgaben-3" class="slide level2">
+<h2>Übungsaufgaben</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1"></a><span class="do">## Aufgabe 2:</span></span>
+<span id="cb65-2"><a href="#cb65-2"></a><span class="co"># Bestimmt das Durchschnittsgewicht der Gesamtgruppe und</span></span>
+<span id="cb65-3"><a href="#cb65-3"></a><span class="co"># der drei Untersuchungsgruppen.</span></span>
+<span id="cb65-4"><a href="#cb65-4"></a></span>
+<span id="cb65-5"><a href="#cb65-5"></a><span class="co"># Lösung describeBy():</span></span>
+<span id="cb65-6"><a href="#cb65-6"></a><span class="fu">describeBy</span>(PlantGrowth <span class="sc">~</span> group)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Descriptive statistics by group 
+group: ctrl
+       vars  n mean   sd median trimmed  mad  min  max range skew kurtosis   se
+weight    1 10 5.03 0.58   5.15       5 0.72 4.17 6.11  1.94 0.23    -1.12 0.18
+group*    2 10 1.00 0.00   1.00       1 0.00 1.00 1.00  0.00  NaN      NaN 0.00
+------------------------------------------------------------ 
+group: trt1
+       vars  n mean   sd median trimmed  mad  min  max range skew kurtosis   se
+weight    1 10 4.66 0.79   4.55    4.62 0.53 3.59 6.03  2.44 0.47     -1.1 0.25
+group*    2 10 2.00 0.00   2.00    2.00 0.00 2.00 2.00  0.00  NaN      NaN 0.00
+------------------------------------------------------------ 
+group: trt2
+       vars  n mean   sd median trimmed  mad  min  max range skew kurtosis   se
+weight    1 10 5.53 0.44   5.44     5.5 0.36 4.92 6.31  1.39 0.48    -1.16 0.14
+group*    2 10 3.00 0.00   3.00     3.0 0.00 3.00 3.00  0.00  NaN      NaN 0.00</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1"></a><span class="fu">describeBy</span>(weight <span class="sc">~</span> group, <span class="at">data =</span> PlantGrowth)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Descriptive statistics by group 
+group: ctrl
+       vars  n mean   sd median trimmed  mad  min  max range skew kurtosis   se
+weight    1 10 5.03 0.58   5.15       5 0.72 4.17 6.11  1.94 0.23    -1.12 0.18
+------------------------------------------------------------ 
+group: trt1
+       vars  n mean   sd median trimmed  mad  min  max range skew kurtosis   se
+weight    1 10 4.66 0.79   4.55    4.62 0.53 3.59 6.03  2.44 0.47     -1.1 0.25
+------------------------------------------------------------ 
+group: trt2
+       vars  n mean   sd median trimmed  mad  min  max range skew kurtosis   se
+weight    1 10 5.53 0.44   5.44     5.5 0.36 4.92 6.31  1.39 0.48    -1.16 0.14</code></pre>
+</div>
+</div>
+</section>
+<section id="übungsaufgaben-4" class="slide level2">
+<h2>Übungsaufgaben</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1"></a><span class="do">## Aufgabe 2:</span></span>
+<span id="cb69-2"><a href="#cb69-2"></a><span class="co"># Bestimmt das Durchschnittsgewicht der Gesamtgruppe und</span></span>
+<span id="cb69-3"><a href="#cb69-3"></a><span class="co"># der drei Untersuchungsgruppen.</span></span>
+<span id="cb69-4"><a href="#cb69-4"></a></span>
+<span id="cb69-5"><a href="#cb69-5"></a><span class="co"># Lösung subset() und mean:</span></span>
+<span id="cb69-6"><a href="#cb69-6"></a><span class="fu">mean</span>(<span class="fu">subset</span>(PlantGrowth, group <span class="sc">==</span> <span class="st">&quot;ctrl&quot;</span>)[,<span class="st">&quot;weight&quot;</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 5.032</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1"></a><span class="fu">mean</span>(<span class="fu">subset</span>(PlantGrowth, group <span class="sc">==</span> <span class="st">&quot;trt1&quot;</span>)[,<span class="st">&quot;weight&quot;</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 4.661</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1"></a><span class="fu">mean</span>(<span class="fu">subset</span>(PlantGrowth, group <span class="sc">==</span> <span class="st">&quot;trt2&quot;</span>)[,<span class="st">&quot;weight&quot;</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 5.526</code></pre>
+</div>
+</div>
+</section>
+<section id="übungsaufgaben-5" class="slide level2">
+<h2>Übungsaufgaben</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1"></a><span class="do">## Aufgabe 2:</span></span>
+<span id="cb75-2"><a href="#cb75-2"></a><span class="co"># Bestimmt das Durchschnittsgewicht der Gesamtgruppe und</span></span>
+<span id="cb75-3"><a href="#cb75-3"></a><span class="co"># der drei Untersuchungsgruppen.</span></span>
+<span id="cb75-4"><a href="#cb75-4"></a></span>
+<span id="cb75-5"><a href="#cb75-5"></a><span class="co"># Lösung im dplyr-Stil:</span></span>
+<span id="cb75-6"><a href="#cb75-6"></a>PlantGrowth <span class="sc">|&gt;</span></span>
+<span id="cb75-7"><a href="#cb75-7"></a>  <span class="fu">group_by</span>(group) <span class="sc">|&gt;</span></span>
+<span id="cb75-8"><a href="#cb75-8"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb75-9"><a href="#cb75-9"></a>    <span class="at">mean_weight =</span> <span class="fu">mean</span>(weight)</span>
+<span id="cb75-10"><a href="#cb75-10"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 2
+  group mean_weight
+  &lt;fct&gt;       &lt;dbl&gt;
+1 ctrl         5.03
+2 trt1         4.66
+3 trt2         5.53</code></pre>
+</div>
+</div>
+</section>
+<section id="übungsaufgaben-6" class="slide level2">
+<h2>Übungsaufgaben</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1"></a><span class="do">## Aufgabe 3:</span></span>
+<span id="cb77-2"><a href="#cb77-2"></a><span class="co"># Berechnet eine Regressionsanalyse mit weight als Kriterium und</span></span>
+<span id="cb77-3"><a href="#cb77-3"></a><span class="co"># group als Gruppenvariable</span></span>
+<span id="cb77-4"><a href="#cb77-4"></a><span class="co"># Hint: lm() und summary()</span></span>
+<span id="cb77-5"><a href="#cb77-5"></a><span class="co"># Was könnt ihr anhand der Regressionsgewichte und </span></span>
+<span id="cb77-6"><a href="#cb77-6"></a><span class="co"># der Ergebnisse aus Aufgabe 2 über die Kontraste sagen?</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="übungsaufgaben-7" class="slide level2">
+<h2>Übungsaufgaben</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1"></a><span class="do">## Aufgabe 3:</span></span>
+<span id="cb78-2"><a href="#cb78-2"></a><span class="co"># Berechnet eine Regressionsanalyse mit weight als Kriterium und</span></span>
+<span id="cb78-3"><a href="#cb78-3"></a><span class="co"># group als Gruppenvariable</span></span>
+<span id="cb78-4"><a href="#cb78-4"></a><span class="co"># Was könnt ihr anhand der Regressionsgewichte und </span></span>
+<span id="cb78-5"><a href="#cb78-5"></a><span class="co"># der Ergebnisse aus Aufgabe 2 über die Kontraste sagen?</span></span>
+<span id="cb78-6"><a href="#cb78-6"></a><span class="co"># Lösung:</span></span>
+<span id="cb78-7"><a href="#cb78-7"></a><span class="fu">summary</span>(<span class="fu">lm</span>(weight <span class="sc">~</span> group, <span class="at">data =</span> PlantGrowth))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = weight ~ group, data = PlantGrowth)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-1.0710 -0.4180 -0.0060  0.2627  1.3690 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   5.0320     0.1971  25.527   &lt;2e-16 ***
+grouptrt1    -0.3710     0.2788  -1.331   0.1944    
+grouptrt2     0.4940     0.2788   1.772   0.0877 .  
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 0.6234 on 27 degrees of freedom
+Multiple R-squared:  0.2641,    Adjusted R-squared:  0.2096 
+F-statistic: 4.846 on 2 and 27 DF,  p-value: 0.01591</code></pre>
+</div>
+</div>
 </section></section>
 <section>
 <section id="komplexere-gruppenvergleiche" class="title-slide slide level1 center">
@@ -2147,37 +2350,37 @@ F-statistic: 0.6885 on 1 and 164 DF,  p-value: 0.4079</code></pre>
 <section id="multiple-regression" class="slide level2">
 <h2>Multiple Regression</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1"></a><span class="co"># Fragestellung: Unterscheidet sich der Anstieg des Interesses von Pre-</span></span>
-<span id="cb59-2"><a href="#cb59-2"></a><span class="co"># zu Post-Messung bei beiden Untersuchungsgruppen?</span></span>
-<span id="cb59-3"><a href="#cb59-3"></a><span class="co">#</span></span>
-<span id="cb59-4"><a href="#cb59-4"></a><span class="co"># Wie könnten wir vorgehen, um die Frage zu beantworten.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1"></a><span class="co"># Fragestellung: Unterscheidet sich der Anstieg des Interesses von Pre-</span></span>
+<span id="cb80-2"><a href="#cb80-2"></a><span class="co"># zu Post-Messung bei beiden Untersuchungsgruppen?</span></span>
+<span id="cb80-3"><a href="#cb80-3"></a><span class="co">#</span></span>
+<span id="cb80-4"><a href="#cb80-4"></a><span class="co"># Wie könnten wir vorgehen, um die Frage zu beantworten.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="multiple-regression-1" class="slide level2">
 <h2>Multiple Regression</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1"></a><span class="co"># Fragestellung: Unterscheidet sich der Anstieg des Interesses von Pre-</span></span>
-<span id="cb60-2"><a href="#cb60-2"></a><span class="co"># zu Post-Messung bei beiden Untersuchungsgruppen?</span></span>
-<span id="cb60-3"><a href="#cb60-3"></a><span class="co">#</span></span>
-<span id="cb60-4"><a href="#cb60-4"></a><span class="co"># Wie könnten wir vorgehen, um die Frage zu beantworten.</span></span>
-<span id="cb60-5"><a href="#cb60-5"></a></span>
-<span id="cb60-6"><a href="#cb60-6"></a><span class="co"># So sagen wir anhand der Gruppe den Wert zum Posttest vorher:</span></span>
-<span id="cb60-7"><a href="#cb60-7"></a>model1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(int2_mean <span class="sc">~</span> sozpos, <span class="at">data =</span> mydata_scales)</span>
-<span id="cb60-8"><a href="#cb60-8"></a></span>
-<span id="cb60-9"><a href="#cb60-9"></a><span class="co"># So sagen wir anhand der Gruppe den anhand des Wertes zum Prä-Test korrigierten</span></span>
-<span id="cb60-10"><a href="#cb60-10"></a><span class="co"># Wert zum Posttest vorher:</span></span>
-<span id="cb60-11"><a href="#cb60-11"></a>model2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(int2_mean <span class="sc">~</span> sozpos <span class="sc">+</span> int1_mean, <span class="at">data =</span> mydata_scales)</span>
-<span id="cb60-12"><a href="#cb60-12"></a></span>
-<span id="cb60-13"><a href="#cb60-13"></a><span class="co"># Und so schauen wir noch, ob sich die Untersuchungsbedingung abhängig von der Höhe des</span></span>
-<span id="cb60-14"><a href="#cb60-14"></a><span class="co"># Prä-Test Werts unterschiedlich auf die Entwicklung von Prä- zum Post-Test auswirkt:</span></span>
-<span id="cb60-15"><a href="#cb60-15"></a>model3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(int2_mean <span class="sc">~</span> sozpos <span class="sc">+</span> int1_mean <span class="sc">+</span> sozpos<span class="sc">:</span><span class="fu">scale</span>(int1_mean, <span class="at">scale =</span> F), <span class="at">data =</span> mydata_scales)</span>
-<span id="cb60-16"><a href="#cb60-16"></a><span class="co"># </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1"></a><span class="co"># Fragestellung: Unterscheidet sich der Anstieg des Interesses von Pre-</span></span>
+<span id="cb81-2"><a href="#cb81-2"></a><span class="co"># zu Post-Messung bei beiden Untersuchungsgruppen?</span></span>
+<span id="cb81-3"><a href="#cb81-3"></a><span class="co">#</span></span>
+<span id="cb81-4"><a href="#cb81-4"></a><span class="co"># Wie könnten wir vorgehen, um die Frage zu beantworten.</span></span>
+<span id="cb81-5"><a href="#cb81-5"></a></span>
+<span id="cb81-6"><a href="#cb81-6"></a><span class="co"># So sagen wir anhand der Gruppe den Wert zum Posttest vorher:</span></span>
+<span id="cb81-7"><a href="#cb81-7"></a>model1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(int2_mean <span class="sc">~</span> sozpos, <span class="at">data =</span> mydata_scales)</span>
+<span id="cb81-8"><a href="#cb81-8"></a></span>
+<span id="cb81-9"><a href="#cb81-9"></a><span class="co"># So sagen wir anhand der Gruppe den anhand des Wertes zum Prä-Test korrigierten</span></span>
+<span id="cb81-10"><a href="#cb81-10"></a><span class="co"># Wert zum Posttest vorher:</span></span>
+<span id="cb81-11"><a href="#cb81-11"></a>model2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(int2_mean <span class="sc">~</span> sozpos <span class="sc">+</span> int1_mean, <span class="at">data =</span> mydata_scales)</span>
+<span id="cb81-12"><a href="#cb81-12"></a></span>
+<span id="cb81-13"><a href="#cb81-13"></a><span class="co"># Und so schauen wir noch, ob sich die Untersuchungsbedingung abhängig von der Höhe des</span></span>
+<span id="cb81-14"><a href="#cb81-14"></a><span class="co"># Prä-Test Werts unterschiedlich auf die Entwicklung von Prä- zum Post-Test auswirkt:</span></span>
+<span id="cb81-15"><a href="#cb81-15"></a>model3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(int2_mean <span class="sc">~</span> sozpos <span class="sc">+</span> <span class="fu">scale</span>(int1_mean, <span class="at">scale =</span> F) <span class="sc">+</span> sozpos<span class="sc">:</span><span class="fu">scale</span>(int1_mean, <span class="at">scale =</span> F), <span class="at">data =</span> mydata_scales)</span>
+<span id="cb81-16"><a href="#cb81-16"></a><span class="co"># </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="multiple-regression-2" class="slide level2">
 <h2>Multiple Regression</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1"></a><span class="fu">summary</span>(model1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1"></a><span class="fu">summary</span>(model1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -2203,7 +2406,7 @@ F-statistic: 0.2115 on 1 and 164 DF,  p-value: 0.6462</code></pre>
 <section id="multiple-regression-3" class="slide level2">
 <h2>Multiple Regression</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1"></a><span class="fu">summary</span>(model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1"></a><span class="fu">summary</span>(model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -2230,30 +2433,23 @@ F-statistic: 351.4 on 2 and 163 DF,  p-value: &lt; 2.2e-16</code></pre>
 <section id="multiple-regression-4" class="slide level2">
 <h2>Multiple Regression</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1"></a><span class="fu">summary</span>(model3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1"></a><span class="fu">summary</span>(model3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
-lm(formula = int2_mean ~ sozpos + int1_mean + sozpos:scale(int1_mean, 
-    scale = F), data = mydata_scales)
+lm(formula = int2_mean ~ sozpos + scale(int1_mean, scale = F) + 
+    sozpos:scale(int1_mean, scale = F), data = mydata_scales)
 
 Residuals:
     Min      1Q  Median      3Q     Max 
 -3.2435 -0.3227  0.1137  0.3528  3.4092 
 
-Coefficients: (1 not defined because of singularities)
-                                                       Estimate Std. Error
-(Intercept)                                            -0.07427    0.23765
-sozpos1                                                 0.13943    0.05419
-int1_mean                                               1.01138    0.05442
-sozposlow social position:scale(int1_mean, scale = F)  -0.04526    0.07483
-sozposhigh social position:scale(int1_mean, scale = F)       NA         NA
-                                                       t value Pr(&gt;|t|)    
-(Intercept)                                             -0.313    0.755    
-sozpos1                                                  2.573    0.011 *  
-int1_mean                                               18.586   &lt;2e-16 ***
-sozposlow social position:scale(int1_mean, scale = F)   -0.605    0.546    
-sozposhigh social position:scale(int1_mean, scale = F)      NA       NA    
+Coefficients:
+                                    Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)                          4.26828    0.05419  78.764   &lt;2e-16 ***
+sozpos1                              0.13943    0.05419   2.573    0.011 *  
+scale(int1_mean, scale = F)          0.98875    0.03741  26.428   &lt;2e-16 ***
+sozpos1:scale(int1_mean, scale = F)  0.02263    0.03741   0.605    0.546    
 ---
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 
@@ -2266,16 +2462,17 @@ F-statistic: 233.5 on 3 and 162 DF,  p-value: &lt; 2.2e-16</code></pre>
 <section id="multiple-regression-5" class="slide level2">
 <h2>Multiple Regression</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1"></a><span class="co"># Erklärt das jeweils komplexere Modell die Daten </span></span>
-<span id="cb67-2"><a href="#cb67-2"></a><span class="co"># wirklich besser als die jeweils einfacheren Modelle?</span></span>
-<span id="cb67-3"><a href="#cb67-3"></a><span class="co"># Oder: Steigt das R-Quadrat signifikant an?</span></span>
-<span id="cb67-4"><a href="#cb67-4"></a><span class="fu">anova</span>(model1, model2, model3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1"></a><span class="co"># Erklärt das jeweils komplexere Modell die Daten </span></span>
+<span id="cb88-2"><a href="#cb88-2"></a><span class="co"># wirklich besser als die jeweils einfacheren Modelle?</span></span>
+<span id="cb88-3"><a href="#cb88-3"></a><span class="co"># Oder: Steigt das R-Quadrat signifikant an?</span></span>
+<span id="cb88-4"><a href="#cb88-4"></a><span class="fu">anova</span>(model1, model2, model3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Variance Table
 
 Model 1: int2_mean ~ sozpos
 Model 2: int2_mean ~ sozpos + int1_mean
-Model 3: int2_mean ~ sozpos + int1_mean + sozpos:scale(int1_mean, scale = F)
+Model 3: int2_mean ~ sozpos + scale(int1_mean, scale = F) + sozpos:scale(int1_mean, 
+    scale = F)
   Res.Df    RSS Df Sum of Sq        F Pr(&gt;F)    
 1    164 418.41                                 
 2    163  78.88  1    339.53 698.9043 &lt;2e-16 ***

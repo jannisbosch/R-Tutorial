@@ -321,6 +321,101 @@ summary(lm(sc1_mean ~ sozpos, data = mydata_scales))
 # wie im vorherigen Beispiel)
 ```
 
+## Übungsaufgaben
+
+```{r}
+# Das ist euer Übungsdatensatz
+PlantGrowth <- PlantGrowth
+PlantGrowth
+
+## Aufgabe 1:
+# Erstellt eine Tabelle mit der Gruppenaufteilung
+# Hint: table()
+```
+
+## Übungsaufgaben
+
+```{r}
+## Aufgabe 1:
+# Erstellt eine Tabelle mit der Gruppenaufteilung
+# Hint: table()
+
+# Lösung:
+table(PlantGrowth[,"group"])
+```
+
+## Übungsaufgaben
+
+```{r}
+## Aufgabe 2:
+# Bestimmt das Durchschnittsgewicht der Gesamtgruppe und
+# der drei Untersuchungsgruppen.
+# Hint: describeBy() oder komplizierter: subset()/filter() und mean()/describe()
+```
+
+## Übungsaufgaben
+
+```{r}
+## Aufgabe 2:
+# Bestimmt das Durchschnittsgewicht der Gesamtgruppe und
+# der drei Untersuchungsgruppen.
+
+# Lösung describeBy():
+describeBy(PlantGrowth ~ group)
+describeBy(weight ~ group, data = PlantGrowth)
+```
+
+## Übungsaufgaben
+
+```{r}
+## Aufgabe 2:
+# Bestimmt das Durchschnittsgewicht der Gesamtgruppe und
+# der drei Untersuchungsgruppen.
+
+# Lösung subset() und mean:
+mean(subset(PlantGrowth, group == "ctrl")[,"weight"])
+mean(subset(PlantGrowth, group == "trt1")[,"weight"])
+mean(subset(PlantGrowth, group == "trt2")[,"weight"])
+```
+
+## Übungsaufgaben
+
+```{r}
+## Aufgabe 2:
+# Bestimmt das Durchschnittsgewicht der Gesamtgruppe und
+# der drei Untersuchungsgruppen.
+
+# Lösung im dplyr-Stil:
+PlantGrowth |>
+  group_by(group) |>
+  summarize(
+    mean_weight = mean(weight)
+  )
+```
+
+## Übungsaufgaben
+
+```{r}
+## Aufgabe 3:
+# Berechnet eine Regressionsanalyse mit weight als Kriterium und
+# group als Gruppenvariable
+# Hint: lm() und summary()
+# Was könnt ihr anhand der Regressionsgewichte und 
+# der Ergebnisse aus Aufgabe 2 über die Kontraste sagen?
+```
+
+## Übungsaufgaben
+
+```{r}
+## Aufgabe 3:
+# Berechnet eine Regressionsanalyse mit weight als Kriterium und
+# group als Gruppenvariable
+# Was könnt ihr anhand der Regressionsgewichte und 
+# der Ergebnisse aus Aufgabe 2 über die Kontraste sagen?
+# Lösung:
+summary(lm(weight ~ group, data = PlantGrowth))
+```
+
 # Komplexere Gruppenvergleiche
 
 ## Multiple Regression
@@ -329,7 +424,7 @@ summary(lm(sc1_mean ~ sozpos, data = mydata_scales))
 # Fragestellung: Unterscheidet sich der Anstieg des Interesses von Pre-
 # zu Post-Messung bei beiden Untersuchungsgruppen?
 #
-# Wie könnten wir vorgehen, um die Frage zu beantworten.
+# Wie könnten wir vorgehen, um die Frage zu beantworten?
 ``` 
 
 ## Multiple Regression
@@ -338,7 +433,7 @@ summary(lm(sc1_mean ~ sozpos, data = mydata_scales))
 # Fragestellung: Unterscheidet sich der Anstieg des Interesses von Pre-
 # zu Post-Messung bei beiden Untersuchungsgruppen?
 #
-# Wie könnten wir vorgehen, um die Frage zu beantworten.
+# Wie könnten wir vorgehen, um die Frage zu beantworten?
 
 # So sagen wir anhand der Gruppe den Wert zum Posttest vorher:
 model1 <- lm(int2_mean ~ sozpos, data = mydata_scales)
@@ -350,7 +445,8 @@ model2 <- lm(int2_mean ~ sozpos + int1_mean, data = mydata_scales)
 # Und so schauen wir noch, ob sich die Untersuchungsbedingung abhängig von der Höhe des
 # Prä-Test Werts unterschiedlich auf die Entwicklung von Prä- zum Post-Test auswirkt:
 model3 <- lm(int2_mean ~ sozpos + scale(int1_mean, scale = F) + sozpos:scale(int1_mean, scale = F), data = mydata_scales)
-# 
+# Disclaimer: Man kann so vorgehen, besser wäre aber bei ausreichender Stichprobengröße
+# ein Mehrebenen-Modell! Dieses Beispiel ist nur zur Veranschaulichung.
 ``` 
 
 ## Multiple Regression
