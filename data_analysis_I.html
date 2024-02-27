@@ -1455,7 +1455,7 @@ SCO11_rev 0.04 0.08 0.16 0.28 0.25 0.13 0.07 0.00</code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="co"># Zur besseren Übersicht bietet es sich nach Berechnung der Skalenmittelwerte </span></span>
 <span id="cb15-2"><a href="#cb15-2"></a><span class="co"># an einen neuen Datensatz zu erstellen, der die Einzelitems nicht beinhaltet </span></span>
-<span id="cb15-3"><a href="#cb15-3"></a>mydata_scales <span class="ot">&lt;-</span> <span class="fu">select</span>(mydata, <span class="sc">!</span><span class="fu">c</span>(int1_items, int2_items, sc1_items, sc2_items, sco_ability_items, sco_opinion_items, enjoyment_items, identification_items, <span class="st">&quot;sc1_2&quot;</span>, <span class="st">&quot;sc1_4&quot;</span>, <span class="st">&quot;sc2_2&quot;</span>, <span class="st">&quot;sc2_4&quot;</span>, <span class="st">&quot;SCO5&quot;</span>, <span class="st">&quot;SCO11&quot;</span>, <span class="st">&quot;End2&quot;</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-3"><a href="#cb15-3"></a>mydata_scales <span class="ot">&lt;-</span> <span class="fu">select</span>(mydata, <span class="sc">!</span><span class="fu">c</span>(<span class="fu">all_of</span>(<span class="fu">c</span>(int1_items, int2_items, sc1_items, sc2_items, sco_ability_items, sco_opinion_items, enjoyment_items, identification_items)), <span class="st">&quot;sc1_2&quot;</span>, <span class="st">&quot;sc1_4&quot;</span>, <span class="st">&quot;sc2_2&quot;</span>, <span class="st">&quot;sc2_4&quot;</span>, <span class="st">&quot;SCO5&quot;</span>, <span class="st">&quot;SCO11&quot;</span>, <span class="st">&quot;End2&quot;</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="datensatz-aufräumen-1" class="slide level2">
@@ -1463,10 +1463,10 @@ SCO11_rev 0.04 0.08 0.16 0.28 0.25 0.13 0.07 0.00</code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="co"># Das geht auch mit der pipe</span></span>
 <span id="cb16-2"><a href="#cb16-2"></a>mydata_scales <span class="ot">&lt;-</span> mydata <span class="sc">|&gt;</span></span>
-<span id="cb16-3"><a href="#cb16-3"></a>  <span class="fu">select</span>(<span class="sc">!</span><span class="fu">c</span>(int1_items, int2_items, sc1_items, sc2_items, sco_ability_items, sco_opinion_items, enjoyment_items, identification_items, <span class="st">&quot;sc1_2&quot;</span>, <span class="st">&quot;sc1_4&quot;</span>, <span class="st">&quot;sc2_2&quot;</span>, <span class="st">&quot;sc2_4&quot;</span>, <span class="st">&quot;SCO5&quot;</span>, <span class="st">&quot;SCO11&quot;</span>, <span class="st">&quot;End2&quot;</span>))</span>
+<span id="cb16-3"><a href="#cb16-3"></a>  <span class="fu">select</span>(<span class="sc">!</span><span class="fu">c</span>(<span class="fu">all_of</span>(<span class="fu">c</span>(int1_items, int2_items, sc1_items, sc2_items, sco_ability_items, sco_opinion_items, enjoyment_items, identification_items)), <span class="st">&quot;sc1_2&quot;</span>, <span class="st">&quot;sc1_4&quot;</span>, <span class="st">&quot;sc2_2&quot;</span>, <span class="st">&quot;sc2_4&quot;</span>, <span class="st">&quot;SCO5&quot;</span>, <span class="st">&quot;SCO11&quot;</span>, <span class="st">&quot;End2&quot;</span>))</span>
 <span id="cb16-4"><a href="#cb16-4"></a></span>
 <span id="cb16-5"><a href="#cb16-5"></a><span class="co"># entspricht:</span></span>
-<span id="cb16-6"><a href="#cb16-6"></a><span class="co"># select(mydata, !c(int1_items, int2_items, sc1_items, sc2_items, sco_ability_items, sco_opinion_items, enjoyment_items, identification_items, &quot;sc1_2&quot;, &quot;sc1_4&quot;, &quot;sc2_2&quot;, &quot;sc2_4&quot;, &quot;SCO5&quot;, &quot;SCO11&quot;, &quot;End2&quot;))</span></span>
+<span id="cb16-6"><a href="#cb16-6"></a><span class="co"># select(mydata, !c(all_of(c(int1_items, int2_items, sc1_items, sc2_items, sco_ability_items, sco_opinion_items, enjoyment_items, identification_items)), &quot;sc1_2&quot;, &quot;sc1_4&quot;, &quot;sc2_2&quot;, &quot;sc2_4&quot;, &quot;SCO5&quot;, &quot;SCO11&quot;, &quot;End2&quot;))</span></span>
 <span id="cb16-7"><a href="#cb16-7"></a></span>
 <span id="cb16-8"><a href="#cb16-8"></a><span class="co"># Die pipe nutzt die Variable vor der pipe |&gt; als erstes Argument für die Funktion nach der pipe |&gt;</span></span>
 <span id="cb16-9"><a href="#cb16-9"></a><span class="co"># Teilweise wird auch %&gt;% als pipe verwendet</span></span>
@@ -2134,7 +2134,155 @@ Multiple R-squared:  0.004181,  Adjusted R-squared:  -0.001891
 F-statistic: 0.6885 on 1 and 164 DF,  p-value: 0.4079</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb58"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1"></a><span class="co"># Mit den Kontrasten verändert sich auch die inhaltliche Interpretation</span></span>
-<span id="cb58-2"><a href="#cb58-2"></a><span class="co"># der Regressionsgewichte</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb58-2"><a href="#cb58-2"></a><span class="co"># der Regressionsgewichte. Hier steht das Regressionsgewicht für den</span></span>
+<span id="cb58-3"><a href="#cb58-3"></a><span class="co"># Abstand jeder Gruppe vom Intercept (es ist also genau halb so groß</span></span>
+<span id="cb58-4"><a href="#cb58-4"></a><span class="co"># wie im vorherigen Beispiel)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section></section>
+<section>
+<section id="komplexere-gruppenvergleiche" class="title-slide slide level1 center">
+<h1>Komplexere Gruppenvergleiche</h1>
+
+</section>
+<section id="multiple-regression" class="slide level2">
+<h2>Multiple Regression</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1"></a><span class="co"># Fragestellung: Unterscheidet sich der Anstieg des Interesses von Pre-</span></span>
+<span id="cb59-2"><a href="#cb59-2"></a><span class="co"># zu Post-Messung bei beiden Untersuchungsgruppen?</span></span>
+<span id="cb59-3"><a href="#cb59-3"></a><span class="co">#</span></span>
+<span id="cb59-4"><a href="#cb59-4"></a><span class="co"># Wie könnten wir vorgehen, um die Frage zu beantworten.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="multiple-regression-1" class="slide level2">
+<h2>Multiple Regression</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1"></a><span class="co"># Fragestellung: Unterscheidet sich der Anstieg des Interesses von Pre-</span></span>
+<span id="cb60-2"><a href="#cb60-2"></a><span class="co"># zu Post-Messung bei beiden Untersuchungsgruppen?</span></span>
+<span id="cb60-3"><a href="#cb60-3"></a><span class="co">#</span></span>
+<span id="cb60-4"><a href="#cb60-4"></a><span class="co"># Wie könnten wir vorgehen, um die Frage zu beantworten.</span></span>
+<span id="cb60-5"><a href="#cb60-5"></a></span>
+<span id="cb60-6"><a href="#cb60-6"></a><span class="co"># So sagen wir anhand der Gruppe den Wert zum Posttest vorher:</span></span>
+<span id="cb60-7"><a href="#cb60-7"></a>model1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(int2_mean <span class="sc">~</span> sozpos, <span class="at">data =</span> mydata_scales)</span>
+<span id="cb60-8"><a href="#cb60-8"></a></span>
+<span id="cb60-9"><a href="#cb60-9"></a><span class="co"># So sagen wir anhand der Gruppe den anhand des Wertes zum Prä-Test korrigierten</span></span>
+<span id="cb60-10"><a href="#cb60-10"></a><span class="co"># Wert zum Posttest vorher:</span></span>
+<span id="cb60-11"><a href="#cb60-11"></a>model2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(int2_mean <span class="sc">~</span> sozpos <span class="sc">+</span> int1_mean, <span class="at">data =</span> mydata_scales)</span>
+<span id="cb60-12"><a href="#cb60-12"></a></span>
+<span id="cb60-13"><a href="#cb60-13"></a><span class="co"># Und so schauen wir noch, ob sich die Untersuchungsbedingung abhängig von der Höhe des</span></span>
+<span id="cb60-14"><a href="#cb60-14"></a><span class="co"># Prä-Test Werts unterschiedlich auf die Entwicklung von Prä- zum Post-Test auswirkt:</span></span>
+<span id="cb60-15"><a href="#cb60-15"></a>model3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(int2_mean <span class="sc">~</span> sozpos <span class="sc">+</span> int1_mean <span class="sc">+</span> sozpos<span class="sc">:</span><span class="fu">scale</span>(int1_mean, <span class="at">scale =</span> F), <span class="at">data =</span> mydata_scales)</span>
+<span id="cb60-16"><a href="#cb60-16"></a><span class="co"># </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="multiple-regression-2" class="slide level2">
+<h2>Multiple Regression</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1"></a><span class="fu">summary</span>(model1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = int2_mean ~ sozpos, data = mydata_scales)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-3.3244 -0.9604  0.2326  1.2611  2.7896 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  4.26739    0.12398   34.42   &lt;2e-16 ***
+sozpos1      0.05702    0.12398    0.46    0.646    
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 1.597 on 164 degrees of freedom
+Multiple R-squared:  0.001288,  Adjusted R-squared:  -0.004802 
+F-statistic: 0.2115 on 1 and 164 DF,  p-value: 0.6462</code></pre>
+</div>
+</div>
+</section>
+<section id="multiple-regression-3" class="slide level2">
+<h2>Multiple Regression</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1"></a><span class="fu">summary</span>(model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = int2_mean ~ sozpos + int1_mean, data = mydata_scales)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-3.2994 -0.3308  0.1295  0.3846  3.3623 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  0.02662    0.16896   0.158   0.8750    
+sozpos1      0.13934    0.05409   2.576   0.0109 *  
+int1_mean    0.98745    0.03728  26.488   &lt;2e-16 ***
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 0.6956 on 163 degrees of freedom
+Multiple R-squared:  0.8117,    Adjusted R-squared:  0.8094 
+F-statistic: 351.4 on 2 and 163 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+</section>
+<section id="multiple-regression-4" class="slide level2">
+<h2>Multiple Regression</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1"></a><span class="fu">summary</span>(model3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = int2_mean ~ sozpos + int1_mean + sozpos:scale(int1_mean, 
+    scale = F), data = mydata_scales)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-3.2435 -0.3227  0.1137  0.3528  3.4092 
+
+Coefficients: (1 not defined because of singularities)
+                                                       Estimate Std. Error
+(Intercept)                                            -0.07427    0.23765
+sozpos1                                                 0.13943    0.05419
+int1_mean                                               1.01138    0.05442
+sozposlow social position:scale(int1_mean, scale = F)  -0.04526    0.07483
+sozposhigh social position:scale(int1_mean, scale = F)       NA         NA
+                                                       t value Pr(&gt;|t|)    
+(Intercept)                                             -0.313    0.755    
+sozpos1                                                  2.573    0.011 *  
+int1_mean                                               18.586   &lt;2e-16 ***
+sozposlow social position:scale(int1_mean, scale = F)   -0.605    0.546    
+sozposhigh social position:scale(int1_mean, scale = F)      NA       NA    
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 0.697 on 162 degrees of freedom
+Multiple R-squared:  0.8121,    Adjusted R-squared:  0.8087 
+F-statistic: 233.5 on 3 and 162 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+</section>
+<section id="multiple-regression-5" class="slide level2">
+<h2>Multiple Regression</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1"></a><span class="co"># Erklärt das jeweils komplexere Modell die Daten </span></span>
+<span id="cb67-2"><a href="#cb67-2"></a><span class="co"># wirklich besser als die jeweils einfacheren Modelle?</span></span>
+<span id="cb67-3"><a href="#cb67-3"></a><span class="co"># Oder: Steigt das R-Quadrat signifikant an?</span></span>
+<span id="cb67-4"><a href="#cb67-4"></a><span class="fu">anova</span>(model1, model2, model3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Model 1: int2_mean ~ sozpos
+Model 2: int2_mean ~ sozpos + int1_mean
+Model 3: int2_mean ~ sozpos + int1_mean + sozpos:scale(int1_mean, scale = F)
+  Res.Df    RSS Df Sum of Sq        F Pr(&gt;F)    
+1    164 418.41                                 
+2    163  78.88  1    339.53 698.9043 &lt;2e-16 ***
+3    162  78.70  1      0.18   0.3659 0.5461    
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+</div>
 </div>
 <div class="footer footer-default">
 

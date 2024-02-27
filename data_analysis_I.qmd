@@ -128,7 +128,7 @@ library(tidyverse)
 ```{r}
 # Zur besseren Übersicht bietet es sich nach Berechnung der Skalenmittelwerte 
 # an einen neuen Datensatz zu erstellen, der die Einzelitems nicht beinhaltet 
-mydata_scales <- select(mydata, !c(int1_items, int2_items, sc1_items, sc2_items, sco_ability_items, sco_opinion_items, enjoyment_items, identification_items, "sc1_2", "sc1_4", "sc2_2", "sc2_4", "SCO5", "SCO11", "End2"))
+mydata_scales <- select(mydata, !c(all_of(c(int1_items, int2_items, sc1_items, sc2_items, sco_ability_items, sco_opinion_items, enjoyment_items, identification_items)), "sc1_2", "sc1_4", "sc2_2", "sc2_4", "SCO5", "SCO11", "End2"))
 ```
 
 ## Datensatz aufräumen
@@ -136,10 +136,10 @@ mydata_scales <- select(mydata, !c(int1_items, int2_items, sc1_items, sc2_items,
 ```{r}
 # Das geht auch mit der pipe
 mydata_scales <- mydata |>
-  select(!c(int1_items, int2_items, sc1_items, sc2_items, sco_ability_items, sco_opinion_items, enjoyment_items, identification_items, "sc1_2", "sc1_4", "sc2_2", "sc2_4", "SCO5", "SCO11", "End2"))
+  select(!c(all_of(c(int1_items, int2_items, sc1_items, sc2_items, sco_ability_items, sco_opinion_items, enjoyment_items, identification_items)), "sc1_2", "sc1_4", "sc2_2", "sc2_4", "SCO5", "SCO11", "End2"))
 
 # entspricht:
-# select(mydata, !c(int1_items, int2_items, sc1_items, sc2_items, sco_ability_items, sco_opinion_items, enjoyment_items, identification_items, "sc1_2", "sc1_4", "sc2_2", "sc2_4", "SCO5", "SCO11", "End2"))
+# select(mydata, !c(all_of(c(int1_items, int2_items, sc1_items, sc2_items, sco_ability_items, sco_opinion_items, enjoyment_items, identification_items)), "sc1_2", "sc1_4", "sc2_2", "sc2_4", "SCO5", "SCO11", "End2"))
 
 # Die pipe nutzt die Variable vor der pipe |> als erstes Argument für die Funktion nach der pipe |>
 # Teilweise wird auch %>% als pipe verwendet
@@ -316,5 +316,66 @@ contrasts(mydata_scales[,"sozpos"])
 contrasts(mydata_scales[,"sozpos"]) <- c(-1,1)
 summary(lm(sc1_mean ~ sozpos, data = mydata_scales))
 # Mit den Kontrasten verändert sich auch die inhaltliche Interpretation
-# der Regressionsgewichte
+# der Regressionsgewichte. Hier steht das Regressionsgewicht für den
+# Abstand jeder Gruppe vom Intercept (es ist also genau halb so groß
+# wie im vorherigen Beispiel)
+```
+
+# Komplexere Gruppenvergleiche
+
+## Multiple Regression
+
+```{r}
+# Fragestellung: Unterscheidet sich der Anstieg des Interesses von Pre-
+# zu Post-Messung bei beiden Untersuchungsgruppen?
+#
+# Wie könnten wir vorgehen, um die Frage zu beantworten.
+``` 
+
+## Multiple Regression
+
+```{r}
+# Fragestellung: Unterscheidet sich der Anstieg des Interesses von Pre-
+# zu Post-Messung bei beiden Untersuchungsgruppen?
+#
+# Wie könnten wir vorgehen, um die Frage zu beantworten.
+
+# So sagen wir anhand der Gruppe den Wert zum Posttest vorher:
+model1 <- lm(int2_mean ~ sozpos, data = mydata_scales)
+
+# So sagen wir anhand der Gruppe den anhand des Wertes zum Prä-Test korrigierten
+# Wert zum Posttest vorher:
+model2 <- lm(int2_mean ~ sozpos + int1_mean, data = mydata_scales)
+
+# Und so schauen wir noch, ob sich die Untersuchungsbedingung abhängig von der Höhe des
+# Prä-Test Werts unterschiedlich auf die Entwicklung von Prä- zum Post-Test auswirkt:
+model3 <- lm(int2_mean ~ sozpos + scale(int1_mean, scale = F) + sozpos:scale(int1_mean, scale = F), data = mydata_scales)
+# 
+``` 
+
+## Multiple Regression
+
+```{r}
+summary(model1)
+```
+
+## Multiple Regression
+
+```{r}
+summary(model2)
+```
+
+## Multiple Regression
+
+```{r}
+summary(model3)
+```
+
+## Multiple Regression
+
+```{r}
+# Erklärt das jeweils komplexere Modell die Daten 
+# wirklich besser als die jeweils einfacheren Modelle?
+# Oder: Steigt das R-Quadrat signifikant an?
+anova(model1, model2, model3)
 ```
