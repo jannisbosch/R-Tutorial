@@ -1,5 +1,5 @@
 ---
-title: "Datenauswertung in R I"
+title: "Datenanalyse in R I"
 author: "Jannis Bosch"
 format: 
   revealjs:
