@@ -1,11 +1,11 @@
 ---
 title: "R Tutorial Überblick"
 author: "Jannis Bosch"
-output: "index.html"
 format: 
   html:
     theme: solar
-embed-resources: true
+    embed-resources: true
+    output-file: "index.html"
 ---
 
 [Einführung in R](tutorial.html){.btn .btn-outline-primary .btn role="button" data-toggle="tooltip" title="Introduction to R"}
