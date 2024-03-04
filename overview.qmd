@@ -1,0 +1,12 @@
+---
+title: "R Tutorial Überblick"
+author: "Jannis Bosch"
+output: "index.html"
+format: 
+  html:
+    theme: solar
+embed-resources: true
+---
+
+[Einführung in R](tutorial.html){.btn .btn-outline-primary .btn role="button" data-toggle="tooltip" title="Introduction to R"}
+[Datenanalyse in R I](data_analysis_I.html){.btn .btn-outline-primary .btn role="button" data-toggle="tooltip" title="Data Analysis I"}

@@ -1,6 +1,6 @@
 ---
-title: "Datenauswertung in R"
-author: "Dr. Jannis Bosch"
+title: "Datenauswertung in R I"
+author: "Jannis Bosch"
 format: 
   revealjs:
     theme: moon
@@ -12,8 +12,6 @@ embed-resources: true
 ## Setup
 
 - Bitte erstellt wieder ein R Projekt und öffnet es
-
-
 
 - Erstellt ein R-Skript für den heutigen Workshop
 
@@ -233,6 +231,10 @@ lm(sc2_mean ~ sc1_mean, data = mydata_scales)
 ```{r}
 # Die summary()-Funktion liefert etwas ausführlichere Ergebnisse
 summary(lm(sc2_mean ~ sc1_mean, data = mydata_scales))
+# Interpretation:
+# Intercept - Wenn alle Prädiktoren einen Wert von 0 haben (in diesem
+# Fall also wenn sc1_mean 0 ist), erwarten wir einen Wert von 0.319 
+# für das Kriterium (sc2_mean)
 ```
 
 ## Die (einfache) lineare Regression
@@ -336,6 +338,7 @@ PlantGrowth
 ## Übungsaufgaben
 
 ```{r}
+#| include: false
 ## Aufgabe 1:
 # Erstellt eine Tabelle mit der Gruppenaufteilung
 # Hint: table()
@@ -356,6 +359,8 @@ table(PlantGrowth[,"group"])
 ## Übungsaufgaben
 
 ```{r}
+#| include: false
+
 ## Aufgabe 2:
 # Bestimmt das Durchschnittsgewicht der Gesamtgruppe und
 # der drei Untersuchungsgruppen.
@@ -368,6 +373,8 @@ describeBy(weight ~ group, data = PlantGrowth)
 ## Übungsaufgaben
 
 ```{r}
+#| include: false
+#| 
 ## Aufgabe 2:
 # Bestimmt das Durchschnittsgewicht der Gesamtgruppe und
 # der drei Untersuchungsgruppen.
@@ -381,6 +388,8 @@ mean(subset(PlantGrowth, group == "trt2")[,"weight"])
 ## Übungsaufgaben
 
 ```{r}
+#| include: false
+
 ## Aufgabe 2:
 # Bestimmt das Durchschnittsgewicht der Gesamtgruppe und
 # der drei Untersuchungsgruppen.
@@ -407,6 +416,8 @@ PlantGrowth |>
 ## Übungsaufgaben
 
 ```{r}
+#| include: false
+
 ## Aufgabe 3:
 # Berechnet eine Regressionsanalyse mit weight als Kriterium und
 # group als Gruppenvariable
@@ -475,3 +486,7 @@ summary(model3)
 # Oder: Steigt das R-Quadrat signifikant an?
 anova(model1, model2, model3)
 ```
+
+## Abschlussaufgabe
+
+- Führt die eben gezeigten Analysen mit der Variablen sc1_mean durch und interpretiert die Ergebnisse
