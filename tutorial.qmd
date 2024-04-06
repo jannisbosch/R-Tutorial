@@ -4,9 +4,9 @@ author: "Jannis Bosch"
 format: 
   revealjs:
     theme: moon
+    embed-resources: true
 execute:
   echo: true
-embed-resources: true
 ---
 
 # Welche Programme benötigen wir?
@@ -476,14 +476,14 @@ violin(age ~ gender, data = sample_data)
 
 </br>
 </br>
-[Hier klicken um den Datensatz runterzuladen](Daten Fragebogen.csv){target="_blank"}
+[Hier klicken um den Datensatz runterzuladen](dateien/Daten Fragebogen.csv){target="_blank"}
 
 ## Einen Datensatz laden
 
 ```{r}
 # Durch das R-Projekt weiß in welchem Ordner es nach der Datei suchen muss
 # Mit der read()-Funktion können wir einen Datensatz aus einer csv-Datei einlesen
-fb_data <- read.csv2("Daten Fragebogen.csv")
+fb_data <- read.csv2(file.path("dateien", "Daten Fragebogen.csv"))
 
 # Die head()-Funktion ermöglicht uns einen Überblick über die Variablen im Datensatz
 head(fb_data)

@@ -260,6 +260,17 @@ round(summary(lm(sc2_mean ~ sc1_mean, data = mydata_scales))[["coefficients"]][1
 ## Die (einfache) lineare Regression
 
 ```{r}
+# Grafisch sieht das dann so aus:
+ggplot(mydata_scales, aes(x = sc1_mean, y = sc2_mean)) + 
+  geom_point() +
+  stat_smooth(method = "lm", col = "red") +
+  xlim(0, 7) +
+  ylim(0, 7)
+```
+
+## Die (einfache) lineare Regression
+
+```{r}
 # Aus dem Regressionsmodell lässt sich auch die Korrelation ableiten.
 # Zumindest im einfachsten Fall mit einem Kriterium und einem Prädiktor ist die 
 # Korrelation r die Wurzel aus dem R²
@@ -323,6 +334,17 @@ summary(lm(sc1_mean ~ sozpos, data = mydata_scales))
 # wie im vorherigen Beispiel)
 ```
 
+## Regressionsbasierte Gruppenvergleiche
+
+```{r}
+# Zur Veranschaulichung der Kontraste
+ggplot(mydata_scales, aes(x = as.numeric(sozpos)-1, y = sc1_mean)) + 
+  geom_point() +
+  stat_smooth(method = "lm", col = "red") +
+  xlim(0, 1) +
+  ylim(0, 7)
+```
+
 ## Übungsaufgaben
 
 ```{r}
@@ -338,7 +360,7 @@ PlantGrowth
 ## Übungsaufgaben
 
 ```{r}
-#| include: false
+
 ## Aufgabe 1:
 # Erstellt eine Tabelle mit der Gruppenaufteilung
 # Hint: table()
@@ -359,7 +381,6 @@ table(PlantGrowth[,"group"])
 ## Übungsaufgaben
 
 ```{r}
-#| include: false
 
 ## Aufgabe 2:
 # Bestimmt das Durchschnittsgewicht der Gesamtgruppe und
@@ -373,8 +394,6 @@ describeBy(weight ~ group, data = PlantGrowth)
 ## Übungsaufgaben
 
 ```{r}
-#| include: false
-#| 
 ## Aufgabe 2:
 # Bestimmt das Durchschnittsgewicht der Gesamtgruppe und
 # der drei Untersuchungsgruppen.
@@ -388,7 +407,6 @@ mean(subset(PlantGrowth, group == "trt2")[,"weight"])
 ## Übungsaufgaben
 
 ```{r}
-#| include: false
 
 ## Aufgabe 2:
 # Bestimmt das Durchschnittsgewicht der Gesamtgruppe und
@@ -416,7 +434,6 @@ PlantGrowth |>
 ## Übungsaufgaben
 
 ```{r}
-#| include: false
 
 ## Aufgabe 3:
 # Berechnet eine Regressionsanalyse mit weight als Kriterium und
