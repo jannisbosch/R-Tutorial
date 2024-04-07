@@ -1,0 +1,458 @@
+---
+title: "Datenanalyse in R II"
+author: "Jannis Bosch"
+format: 
+  revealjs:
+    theme: moon
+execute:
+  echo: true
+embed-resources: true
+---
+
+# Setup + kurze Wiederholung
+
+## Setup
+
+- Bitte erstellt wieder ein R Projekt und öffnet es
+
+- Erstellt ein R-Skript für den heutigen Workshop
+
+## Daten herunterladen
+
+[Hier klicken um den Datensatz runterzuladen](dateien/experiment_data.rds){target="_blank"}
+
+## Daten einlesen & Bibliotheken laden
+
+```{r}
+# Lest zunächst den Datensatz ein
+mydata <- readRDS(file.path("dateien", "experiment_data.rds"))
+
+library(tidyverse)
+library(psych)
+```
+
+# Wiederholung - Skalen bilden
+
+## Items für die Skalen definieren
+
+```{r}
+# Im Datensatz sind Items aus acht verschiedenen Skalen
+# Erstellt nun zunächst für jede Skala einen Vektor mit den Item-Namen im Datensatz
+sc1_items <- c("sc1_1", "sc1_2_rev", "sc1_3", "sc1_4_rev") # self-concept (pre-test)
+sc2_items <- c("sc2_1", "sc2_2_rev", "sc2_3", "sc2_4_rev") # self-concept (post-test)
+int1_items <- c("int1_1", "int1_2", "int1_3", "int1_4") # interest (pre-test)
+int2_items <- c("int2_1", "int2_2", "int2_3", "int2_4") # interest (post-test)
+sco_ability_items <- c("SCO1", "SCO2", "SCO3", "SCO4", "SCO5_rev", "SCO6") # social comparison orientation ability
+sco_opinion_items <- c("SCO7", "SCO8", "SCO9", "SCO10", "SCO11_rev") # social comparison orientation opinion
+identification_items <- c("Ident1", "Ident2", "Ident3", "Ident4") # university identification
+enjoyment_items <- c("End1", "End2_rev", "End3") # enjoyment of the task
+
+# Diese Variablen können wir später zur Berechnung der Skalenmittelwerte nutzen
+```
+
+## Skalenmittelwerte berechnen
+
+```{r}
+# Wie beim letzten mal erstellen wir jetzt neue Spalten für die 
+# Skalenmittelwerte mit der rowMeans()-Funktion
+mydata[,"sc1_mean"] <- rowMeans(mydata[,sc1_items], na.rm = T)
+mydata[,"sc2_mean"] <- rowMeans(mydata[,sc2_items], na.rm = T)
+mydata[,"int1_mean"] <- rowMeans(mydata[,int1_items], na.rm = T)
+mydata[,"int2_mean"] <- rowMeans(mydata[,int2_items], na.rm = T)
+mydata[,"sco_ability_mean"] <- rowMeans(mydata[,sco_ability_items], na.rm = T)
+mydata[,"sco_opinion_mean"] <- rowMeans(mydata[,sco_opinion_items], na.rm = T)
+mydata[,"identification_mean"] <- rowMeans(mydata[,identification_items], na.rm = T)
+mydata[,"enjoyment_mean"] <- rowMeans(mydata[,enjoyment_items], na.rm = T)
+```
+
+## Datensatz aufräumen
+
+```{r}
+# Zur besseren Übersicht bietet es sich nach Berechnung der Skalenmittelwerte 
+# an einen neuen Datensatz zu erstellen, der die Einzelitems nicht beinhaltet 
+mydata_scales <- select(mydata, !c(all_of(c(int1_items, int2_items, sc1_items, sc2_items, sco_ability_items, sco_opinion_items, enjoyment_items, identification_items)), "sc1_2", "sc1_4", "sc2_2", "sc2_4", "SCO5", "SCO11", "End2"))
+```
+
+## Datensatz aufräumen
+
+```{r}
+# Das geht auch mit der pipe
+mydata_scales <- mydata |>
+  select(!c(all_of(c(int1_items, int2_items, sc1_items, sc2_items, sco_ability_items, sco_opinion_items, enjoyment_items, identification_items)), "sc1_2", "sc1_4", "sc2_2", "sc2_4", "SCO5", "SCO11", "End2"))
+
+# entspricht:
+# select(mydata, !c(all_of(c(int1_items, int2_items, sc1_items, sc2_items, sco_ability_items, sco_opinion_items, enjoyment_items, identification_items)), "sc1_2", "sc1_4", "sc2_2", "sc2_4", "SCO5", "SCO11", "End2"))
+
+# Die pipe nutzt die Variable vor der pipe |> als erstes Argument für die Funktion nach der pipe |>
+# Teilweise wird auch %>% als pipe verwendet
+# Für unsere heutigen Bedürfnisse sind beide pipes äquivalent
+# %>% kommt aus der tidyverse-Bibliothek (bzw. aus magrittr), |> aus base R (keine Bibliothek nötig)
+```
+
+## Daten aufbereiten
+
+```{r}
+# Unsere Daten sind nicht ganz konsistent benannt
+# Alter und Geschlecht sind groß geschrieben und auf Deutsch
+
+# So können wir die Spalten neu benennen 
+mydata_scales <- mydata_scales |>
+  rename(age = Alter, gender = Geschlecht)
+```
+
+## Die (einfache) lineare Regression
+
+```{r}
+# Die summary()-Funktion liefert etwas ausführlichere Ergebnisse
+summary(lm(sc2_mean ~ sc1_mean, data = mydata_scales))
+# Interpretation:
+# Intercept - Wenn alle Prädiktoren einen Wert von 0 haben (in diesem
+# Fall also wenn sc1_mean 0 ist), erwarten wir einen Wert von 0.319
+# für das Kriterium (sc2_mean). Jeder Anstieg um einen Punkt in sc1_mean, 
+# bedeutet einen Anstieg des Erwartungswerts um 0.88 Punkt in sc2_mean.
+```
+
+## Die (einfache) lineare Regression
+
+```{r}
+# Grafisch sieht das dann so aus:
+ggplot(mydata_scales, aes(x = sc1_mean, y = sc2_mean)) + 
+  geom_point() +
+  stat_smooth(method = "lm", col = "red") +
+  xlim(0, 7) +
+  ylim(0, 7)
+# Die Grade repräsentiert das Intercept (Y-Achsen-Abschnitt) und die Steigung (Regressionsgewicht b bzw. Beta wenn wir alle Prädiktoren z-standardisieren)
+```
+
+# Komplexere Gruppenvergleiche
+
+## Multiple Regression
+
+```{r}
+# Fragestellung: Unterscheidet sich der Anstieg des Interesses von Pre-
+# zu Post-Messung zwischen den Untersuchungsgruppen?
+#
+# Wie könnten wir vorgehen, um die Frage zu beantworten?
+``` 
+
+## Multiple Regression
+
+```{r}
+# Fragestellung: Unterscheidet sich der Anstieg des Interesses von Pre-
+# zu Post-Messung zwischen den Untersuchungsgruppen?
+#
+# Wie könnten wir vorgehen, um die Frage zu beantworten?
+```
+
+## Multiple Regression
+
+```{r}
+# Zunächst bestimmen wir die Kontraste
+contrasts(mydata_scales[,"sozpos"]) <- c(0,1)
+# Weiß noch jemand was das für unser Modell bedeutet?
+
+# Nullmodell zum Vergleich
+model0 <- lm(int2_mean ~ 1, data = mydata_scales)
+
+# So sagen wir anhand der Gruppe den Wert zum Posttest vorher:
+model1 <- lm(int2_mean ~ sozpos, data = mydata_scales)
+
+# So sagen wir anhand der Gruppe den anhand des Wertes zum Prä-Test
+# korrigierten Wert zum Posttest vorher:
+model2 <- lm(int2_mean ~ sozpos + int1_mean, data = mydata_scales)
+
+# Und so schauen wir noch, ob sich die Untersuchungsbedingung abhängig von der Höhe des
+# Prä-Test Werts unterschiedlich auf die Entwicklung von Prä- zum Post-Test auswirkt 
+# bzw. ob der Zusammenhang zwischen Prä- und Post-Test je nach Untersuchungsbedingung unterschiedlich stark ist:
+model3 <- lm(int2_mean ~ sozpos + int1_mean + sozpos:int1_mean, data = mydata_scales)
+# Die Richtung der Interpretation ist eine inhaltliche Frage und kann zumindest in diesem Design nicht statistisch beantwortet werden.
+
+# Disclaimer: Man kann so vorgehen, besser wäre aber bei ausreichender Stichprobengröße
+# ein Mehrebenen-Modell! Dieses Beispiel ist nur zur Veranschaulichung.
+``` 
+
+## Multiple Regression
+
+```{r}
+summary(model0)
+# Interpretation?
+```
+
+## Multiple Regression
+
+```{r}
+summary(model0)
+# Interpretation: Der Mittelwert des Interesses (Post-Test) beträgt ca. 4.27.
+mean(mydata_scales[,"int2_mean"])
+```
+
+## Multiple Regression
+
+```{r}
+summary(model1)
+# Interpretation?
+```
+
+## Multiple Regression
+
+```{r}
+summary(model1)
+# Interpretation: Der Mittelwert des Interesses (Post-Test) in der low social position Gruppe (Referenzgruppe) beträgt ca. 4.21.
+# Für die high social position Gruppe wird darauf ca. 0.11 aufaddiert.
+```
+
+## Multiple Regression
+
+```{r}
+# Das stimmt auch mathematisch mit den Mitelwerten der Gruppen überein:
+mydata_scales |>
+  group_by(sozpos) |>
+  summarize(
+    mean_int2 = mean(int2_mean)
+  )
+```
+
+
+## Multiple Regression
+
+```{r}
+summary(model2)
+# Interpretation?
+```
+
+## Multiple Regression
+
+```{r}
+summary(model2)
+# Interpretation: Wenn in1_mean 0 ist, ist der Erwartungswert für das Interesse beim Post-Test in der low social position Gruppe (Referenzgruppe) ca. -0.11.
+# Für jeden Punkt höher als 0 im Prä-Test Interesse werden darauf ca. 0.99 Punkt aufaddiert.
+# Für Personen in der high social position Gruppe werden zusätzlich ca. 0.28 aufaddiert.
+```
+
+## Multiple Regression
+
+```{r}
+summary(model3)
+# Interpretation?
+```
+
+## Multiple Regression
+
+```{r}
+summary(model3)
+# Interpretation: Wenn in1_mean 0 ist, ist der Erwartungswert für das Interesse beim Post-Test in der low social position Gruppe (Referenzgruppe) ca. -0.02.
+# Für jeden Punkt höher als 0 im Prä-Test Interesse werden darauf bei beiden Gruppen ca. 0.97 Punkt aufaddiert.
+# Für Personen in der high social position Gruppe werden zusätzlich ca. 0.09 Punkte aufaddiert.
+# Zusätzlich werden nur in der high social position Gruppe noch einmal für jeden Punkt höher als 0 im Prä-Test Interesse ca. 0.05 Punkte aufaddiert.
+```
+
+## Multiple Regression
+
+```{r}
+# Erklärt das jeweils komplexere Modell die Daten 
+# wirklich besser als die jeweils einfacheren Modelle?
+# Oder: Steigt das R-Quadrat signifikant an?
+anova(model0, model1, model2, model3)
+
+# In diesem Fall würde es naheliegen sich für model2 zu entscheiden.
+```
+
+## Übungsaufgabe
+
+- Führt die eben gezeigten Analysen mit dem Selbstkonzept durch und interpretiert die Ergebnisse
+
+## Lösung
+
+- Auf der nächsten Folie kommt die Lösung :)
+
+## Lösung
+
+```{r}
+# Nullmodell:
+model0sc <- lm(sc2_mean ~ 1, data = mydata_scales)
+
+# Hier werden wieder die Post-Test Werte anhand der Gruppe
+# vorhergesagt:
+model1sc <- lm(sc2_mean ~ sozpos, data = mydata_scales)
+# oder: model1sc <- update(model0sc, .~. + sozpos) 
+
+# Hier wird wieder für die Prä-Test Werte korrigiert:
+model2sc <- lm(sc2_mean ~ sozpos + sc1_mean, data = mydata_scales)
+# oder: model2sc <- update(model1sc, .~. + sc1_mean)
+
+# Und hier betrachten wir wieder, ob das ursprüngliche 
+# Selbstkonzept den Effekt der Untersuchungsbedingung 
+# beeinflusst:
+model3sc <- lm(sc2_mean ~ sozpos + sc1_mean + sozpos:sc1_mean, data = mydata_scales)
+# oder: model3sc <- update(model2sc, .~. + sc1_mean:sozpos)
+# oder: model3sc <- lm(sc2_mean ~ sozpos*sc1_mean, data = mydata_scales)
+```
+
+## Lösung - Modell 0
+
+```{r}
+summary(model0sc)
+# Interpretation: Der Mittelwert im Selbstkonzept (Post-Test) beträgt ca. 4
+# über beide Gruppen hinweg.
+```
+
+
+## Lösung - Modell 1
+
+```{r}
+summary(model1sc)
+```
+
+## Lösung - Modell 2
+
+```{r}
+summary(model2sc)
+```
+
+## Lösung - Modell 3
+
+```{r}
+summary(model3sc)
+```
+
+## Lösung - Modellvergleiche
+
+```{r}
+anova(model0sc, model1sc, model2sc, model3sc)
+```
+
+## Noch eine Übungsaufgabe
+
+- Dieses Mal nur mit metrischen Variablen
+
+```{r}
+#| eval: false
+# installiert dafür die datarium-Bibliothek für den Datensatz
+install.packages("datarium")
+```
+
+```{r}
+# und ladet den Datensatz
+data("marketing", package = "datarium")
+# Ihr solltet jetzt die Variable marketing im Arbeitsspeicher sehen
+```
+
+## Noch eine Übungsaufgabe
+
+```{r}
+# Zunächst inspizieren wir den Datensatz
+describe(marketing)
+
+# Sales ist unsere AV und zeigen die Verkaufszahlen 
+# der jeweiligen Firma (Einheit unbekannt)
+# Die anderen drei Variablen (YT, FB, NP) sind unsere UVs
+# und zeigen die Werbungskosten (in 1000$) auf der 
+# jeweiligen Plattform
+```
+
+## Übungsaufgabe 1
+
+Betrachtet die drei Plattformen zunächst einzeln und beantwortet die folgenden Fragestellungen:
+
+- Gibt es einen Zusammenhang zwischen den über Facebook/Youtube/Zeitungen ausgegebenen Werbegeldern und den Verkaufszahlen?
+
+## Lösung 1
+
+- Auf der nächsten Folie kommt die Lösung :)
+
+## Lösung 1-0
+
+```{r}
+model0sales <- lm(sales ~ 1, data = marketing)
+summary(model0sales)
+# Schauen wir uns zunächst das Intercept-only Modell an. 
+# Der Mittelwert der sales in der Stichprobe beträgt 16.827
+# und unterscheidet sich signifikant von 0.
+mean(marketing$sales)
+```
+
+## Lösung 1-1
+
+```{r}
+modelFB <- lm(sales ~ facebook, data = marketing)
+summary(modelFB)
+
+# Interpretation: Eine Firma, die kein Geld auf Facebook ausgibt, 
+# hat einen erwarteten Verkaufswert von ca. 11 Einheiten.
+# Mit jedem Anstieg um 1000$ steigt auch der erwartete 
+# Verkaufswert um ca. 0.2 Einheiten.
+# Aber: Keine Kausalinterpretation zulässig (es sei denn es würde # sich um ein Experiment handeln).
+```
+
+## Lösung 1-2
+
+```{r}
+modelYT <- lm(sales ~ youtube, data = marketing)
+summary(modelYT)
+
+# Interpretation: Eine Firma, die kein Geld auf Youtube ausgibt, 
+# hat einen erwarteten Verkaufswert von ca. 8.4 Einheiten.
+# Mit jedem Anstieg um 1000$ steigt auch der erwartete 
+# Verkaufswert um ca. 0.05 Einheiten.
+```
+
+## Lösung 1-3
+
+```{r}
+modelNP <- lm(sales ~ newspaper, data = marketing)
+summary(modelNP)
+
+# Interpretation: Eine Firma, die kein Geld bei Zeitungen ausgibt,
+# hat einen erwarteten Verkaufswert von ca. 14.8 Einheiten.
+# Mit jedem Anstieg um 1000$ steigt auch der erwartete 
+# Verkaufswert um ca. 0.05 Einheiten.
+```
+
+# Übungsaufgabe 2
+
+- Betrachtet nun die Werbekosten auf Facebook und Youtube gemeinsam
+
+- Beantwortet die Frage, ob die Daten für Synergie-Effekte sprechen (i.e., ob eine Investition auf FB und YT zusätzliche positive Effekte über die einzelnen Investitionen hinaus hat.)
+
+- Versucht dabei Schritt für Schritt vorzugehen. Fügt also pro Schritt nur einen Prädiktor hinzu und schaut wie sich das Ergebnis dabei verändert
+
+## Lösung 2
+
+- Auf der nächsten Folie kommt wieder die Lösung :)
+
+## Lösung 2-1
+
+```{r}
+# Zunächst fügen wir den Prädiktor Werbungskosten Youtube zu unserem
+# Facebook-Modell hinzu.
+modelFBYT <- update(modelFB, .~. + youtube)
+summary(modelFBYT)
+# Interpretation: Das Intercept zeigt hier, dass man bei Firmen, 
+# die 0$ in Werbungskosten für FB und YT investieren, einen Verkaufswert
+# von ca. 3.5 prognostizieren würde.
+# Die Prädiktoren werden nur geringfügig kleiner.
+```
+
+## Lösung 2-2
+
+```{r}
+modelFBxYT <- update(modelFBYT, .~. + facebook:youtube)
+summary(modelFBxYT)
+# Interpretation: Das Intercept zeigt hier, dass man bei Firmen, 
+# die 0$ in Werbungskosten für FB und YT investieren, einen Verkaufswert
+# von ca. 8.1 prognostizieren würde.
+# Jede 1000$ in Facebook Investitionen bringen dabei 0.029 + 0.0009 * 1000$-Youtube-Investitionen in sales. 
+# Jede 1000$ in Youtube Investitionen bringen 0.019 + 0.0009 in 1000$-Facebook-Investition.
+# Die Werbungskosten zeigen also Synergie-Effekte (i.e., Investitionen in Facebook 
+# werden effektiver, je mehr man bei Youtube investiert).
+```
+
+## Lösung 2-3
+
+- Das R² spricht für eine bessere Passung des Modells mit Interaktionsterm (ca. 97% aufgeklärte Varianz vs. ca. 90% aufgeklärte Varianz)
+```{r}
+# Ein Modelltest zeigt, dass dieser Unterschied auch statistisch signifikant ist
+anova(model0sales, modelFB, modelFBYT, modelFBxYT)
+```
+
+# Das war's! 

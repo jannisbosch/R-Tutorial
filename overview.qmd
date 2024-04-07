@@ -10,3 +10,4 @@ format:
 
 [Einführung in R](tutorial.html){.btn .btn-outline-primary .btn role="button" data-toggle="tooltip" title="Introduction to R"}
 [Datenanalyse in R I](data_analysis_I.html){.btn .btn-outline-primary .btn role="button" data-toggle="tooltip" title="Data Analysis I"}
+[Datenanalyse in R II](data_analysis_II.html){.btn .btn-outline-primary .btn role="button" data-toggle="tooltip" title="Data Analysis II"}
