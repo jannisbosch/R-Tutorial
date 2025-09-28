@@ -485,6 +485,9 @@ violin(age ~ gender, data = sample_data)
 # Mit der read()-Funktion können wir einen Datensatz aus einer csv-Datei einlesen
 fb_data <- read.csv2(file.path("dateien", "Daten Fragebogen.csv"))
 
+# Alternativ kann man den Datensatz auch direkt aus dem Internet importieren:
+fb_data <- read.csv2(file.path("https://jannisbosch.github.io/R-Tutorial/dateien/Daten%20Fragebogen.csv"))
+
 # Die head()-Funktion ermöglicht uns einen Überblick über die Variablen im Datensatz
 head(fb_data)
 
