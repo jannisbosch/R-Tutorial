@@ -531,14 +531,12 @@ fb_data[,"OBMT"]
 ## Lösung 1
 
 ```{r}
-#| echo: false
 alpha(fb_data[,c("spq2", "spq11", "spq20", "spq29", "spq38", "spq46", "spq54", "spq71")])
 ```
 
 ## Lösung 2
 
 ```{r}
-#| echo: false
 fb_data[,"ESA"] <- rowMeans(fb_data[,c("spq2", "spq11", "spq20", "spq29", "spq38", "spq46", "spq54", "spq71")], na.rm = T)
 
 fb_data[,"ESA"]
@@ -547,6 +545,5 @@ fb_data[,"ESA"]
 ## Lösung 3
 
 ```{r}
-#| echo: false
 mean(fb_data[,"ESA"])
 ```
