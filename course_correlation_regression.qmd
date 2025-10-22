@@ -1,0 +1,33 @@
+---
+title: "Statistische Auswertung mit R"
+author: "Jannis Bosch"
+format: 
+  revealjs:
+    theme: moon
+execute:
+  echo: true
+embed-resources: true
+---
+
+## Setup
+
+- Bitte erstellt wieder ein R Projekt und öffnet es
+
+- Erstellt ein R-Skript für den heutigen Workshop
+
+## Daten herunterladen
+
+[Hier klicken um den Datensatz runterzuladen](dateien/experiment_data.rds){target="_blank"}
+
+## Daten einlesen
+
+```{r}
+# Lest zunächst den Datensatz ein
+mydata <- readRDS(file.path("dateien", "experiment_data.rds"))
+
+# Schaut euch dann die Struktur des Datensatzes in RStudio an
+
+mydata_kurs <- mydata %>%
+  select(UserID, sc1_1:sc2_4)
+```
+
