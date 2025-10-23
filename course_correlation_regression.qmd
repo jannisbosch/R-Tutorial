@@ -4,9 +4,9 @@ author: "Jannis Bosch"
 format: 
   revealjs:
     theme: moon
+    embed-resources: true
 execute:
   echo: true
-embed-resources: true
 ---
 
 ## Setup
@@ -22,12 +22,463 @@ embed-resources: true
 ## Daten einlesen
 
 ```{r}
-# Lest zunächst den Datensatz ein
+# Lest zunächst den Datensatz ein...
 mydata <- readRDS(file.path("dateien", "experiment_data.rds"))
 
-# Schaut euch dann die Struktur des Datensatzes in RStudio an
+# ... und inspiziert ihn
 
-mydata_kurs <- mydata %>%
-  select(UserID, sc1_1:sc2_4)
 ```
 
+# Exkurs: R-Bibliotheken
+
+## psych
+
+- Die psych-Bibliothek beinhaltet verschiedenste Funktionen für die Datenauswertung, Ausreißeranalyse und zur Test- und Fragebogenkonstruktion (Faktorenanalyse, Cronbach's Alpha, etc.)
+
+- Unter <https://personality-project.org/r/psych/>{target="_blank"} kann man weitere Informationen zur psych-Bibliothek finden
+
+## sjPlot
+
+- Die sjPlot-Bibliothek beinhalten Funktionen, um Tabellen und Graphen für häufige Auswertungsmethoden (z.B. Korrelationen und Regressionsanalysen) zu erstellen
+
+- Mehr Informationen unter <https://strengejacke.github.io/sjPlot/>{target="_blank"}
+
+## tidyverse
+
+- Das tidyverse ist eine Sammlung von Bibliotheken zur Datenanalyse
+
+- Es beinhaltet verschiedene Bibliotheken und Funktionen, die die Datenaufbereitung erleichtern, Tools zur Erstellung von Graphiken (ggplot) und vieles mehr
+
+- Mehr Informationen unter <https://www.tidyverse.org/>{target="_blank"}
+
+## R Cheat Sheets
+
+- Cheat Sheets sind eine graphische Aufbereitung verschiedener Funktionen von Bibliotheken
+
+- [dplyr Cheat Sheet](https://nyu-cdsc.github.io/learningr/assets/data-transformation.pdf){target="_blank"}
+
+- [tidyr Cheat Sheet](https://raw.githubusercontent.com/rstudio/cheatsheets/main/tidyr.pdf){target="_blank"}
+
+## Biblotheken installieren
+
+</br>
+```{r}
+#| eval: false
+# Die Bibliotheken installieren
+install.packages("tidyverse")
+install.packages("sjPlot")
+install.packages("psych")
+# Das muss man an jedem Computer nur einmal ausführen
+```
+</br>
+```{r}
+# Und die Bibliotheken laden
+library(tidyverse)
+library(sjPlot)
+library(psych)
+# Das muss man bei jedem Neustart von R erneut ausführen
+```
+
+# Datenaufbereitung mit dplyr
+
+## Skalen bilden
+
+```{r}
+# Wir nutzen die pipe und die mutate-Funktion aus der dplyr-Bibliothek, um neue Variablen zu definieren
+# Die pipe nutzt die Variable vor der pipe |> als erstes Argument für die Funktion nach der pipe |>
+
+mydata <- mydata |>
+  group_by(UserID) |>      
+  mutate(
+    sc1mean = mean(c(sc1_1, sc1_2_rev, sc1_3, sc1_4_rev), na.rm = T), 
+    sc2mean = mean(c(sc2_1, sc2_2_rev, sc2_3, sc2_4_rev), na.rm = T),
+    int1mean = mean(c(int1_1, int1_2, int1_3, int1_4), na.rm = T),
+    int2mean = mean(c(int2_1, int2_2, int2_3, int2_4), na.rm = T)
+  ) |>
+  ungroup() 
+
+# Wir sagen R, dass wir die folgenden Berechnungen pro UserID durchführen wollen (group_by)
+# Wir berechnen die Skalenmittelwerte (pro Person) (mutate)
+# Wir heben die Gruppierung des Datensatzes wieder auf (ungroup)
+
+```
+
+## Datensatz aufräumen
+
+```{r}
+# Für die heutigen Berechnungen benötigen wir nur einen Teil des Datensatzes
+# Deswegen nutzten wir die select-Funktion, um den Datensatz aufzuräumen
+
+mydata_scales <- mydata |>
+  select(UserID, sozpos, sc1mean, sc2mean, int1mean, int2mean) 
+# Wir erstellen einen reduzierten Datensatz und nennen ihn mydata_scales
+# Er beinhaltet nur die UserID, die experimentellen Gruppen und die berechneten Skalenmittelwerte
+
+```
+
+## Einen Überblick über die Daten bekommen
+
+```{r}
+# Die describe-Funktion bietet einen Überblick über die Daten
+mydata_scales |>
+  describe()
+
+```
+
+## Gruppen vergleichen
+
+```{r}
+#...und das auch getrennt für beide Experimentalgruppen
+mydata_scales |>
+  describeBy(group = "sozpos")
+
+```
+
+# Korrelationen berechnen
+
+## Die cor-Funktion
+
+```{r}
+# Korrelationen können wir mit der corr.test-Funktion aus der psych-Bibliothek berechnen
+mydata_scales |>
+  select(sc1mean, sc2mean, int1mean, int2mean) |>
+  corr.test()
+```
+
+## Die tab_corr-Funktion
+
+```{r}
+# Mit der sjPlot-Bibliothek können wir uns das ganze tabellarisch aufbereiten lassen
+mydata_scales |>
+  select(sc1mean, sc2mean, int1mean, int2mean) |>
+  tab_corr()
+
+# In der Hilfe-Datei können wir uns die tab_corr-Funktion genauer anschauen
+#?tab_corr
+
+```
+
+## Die tab_corr-Funktion
+
+```{r}
+#| eval: false
+
+# Wir können die Ausgabe auch entsprechend unseren Vorstellungen anpassen und als HTML-Tabelle speichern
+mydata_scales |>
+  select(sc1mean, sc2mean, int1mean, int2mean) |>
+  tab_corr(p.numeric = T, digits = 2, triangle = "lower", title = "Meine Korrelationstabelle", var.labels = c("Selbstkonzept (Pre)", "Selbstkonzept (Post)", "Interesse (Pre)", "Interesse (Post)"), file = "Meine Korrelationstabelle.html")
+
+# Die HTML-Tabelle könnt ihr mit copy-paste auch in ein Word-Dokument einfügen
+
+```
+
+## Korrelationen grafisch darstellen
+
+```{r}
+mydata_scales |>
+  plot_scatter(sc1mean, sc2mean, fit.line = "lm")
+
+```
+
+# Regressionsanalysen berechnen
+
+## Die (einfache) lineare Regression
+
+```{r}
+# Zusammenhänge können natürlich auch per Regressionsanalyse
+# betrachtet werden. Hier wurde der Zusammenhang zwischen dem Selbstkonzept
+# zum ersten und zweiten Messzeitpunkt mit der lm()-Funktion berechnet
+lm(sc2mean ~ sc1mean, data = mydata_scales)
+```
+
+## Die (einfache) lineare Regression
+
+```{r}
+# Die summary()-Funktion liefert etwas ausführlichere Ergebnisse
+summary(lm(sc2mean ~ sc1mean, data = mydata_scales))
+# Interpretation:
+# Intercept - Wenn alle Prädiktoren einen Wert von 0 haben (in diesem
+# Fall also wenn sc1mean 0 ist), erwarten wir einen Wert von 0.319 
+# für das Kriterium (sc2mean)
+```
+
+## Die (einfache) lineare Regression
+
+```{r}
+# Man kann sich auch einzelne Elemente aus der Ausgabe anzeigen lassen
+summary(lm(sc2mean ~ sc1mean, data = mydata_scales))[["coefficients"]]
+
+# Das Intercept ist immer der vorhergesagte Wert für das Kriterium (hier sc2mean)
+# wenn alle Prädiktoren (hier sc1mean) den Wert 0 haben. Jeder Erhöhung um einen Punkt
+# in der Prädiktorvariable erhöht den vorhergesagten Wert für das Kriterium um das zugehörige
+# b-Gewicht (Estimate)
+# Das Modell sagt also aus:
+# Eine Person mit einem Selbstkonzept von 0 im Pre-Test würde das Modell einen Post-Test Wert
+# von (Intercept)
+round(summary(lm(sc2mean ~ sc1mean, data = mydata_scales))[["coefficients"]][1,"Estimate"], 2)
+# vorhersagen. Einer Person mit einem Pre-Test Selbstkonzept von 2 würde das Modell
+# einen Post-Test Wert von (Intercept + 2 * Regressionsgewicht sc1mean)
+round(summary(lm(sc2mean ~ sc1mean, data = mydata_scales))[["coefficients"]][1,"Estimate"] + 2 * summary(lm(sc2mean ~ sc1mean, data = mydata_scales))[["coefficients"]][2,"Estimate"], 2)
+# vorhersagen.
+```
+
+## Die (einfache) lineare Regression
+
+```{r}
+# Diese Informationen kann man theoretisch auch aus der Grafik ablesen
+# Ich habe hier mit dem Plus-Zeichen noch ein paar Optionen in der ggplot-Grafik verändert
+mydata_scales |>
+  plot_scatter(sc1mean, sc2mean, fit.line = "lm") + 
+  coord_cartesian(xlim = c(0, 7), ylim = c(0, 7)) +
+  scale_y_continuous(breaks = seq(0, 7, by = 1)) +
+  scale_x_continuous(breaks = seq(0, 7, by = 1))
+
+# Intercept / Y-Achsen-Abschnitt: 0.318
+# Prädiktor sc1mean / Steigung: 0.880
+# Vorhersage bei Personen mit sc1mean = 2: 2.08
+```
+
+## Die (einfache) lineare Regression
+
+```{r}
+# Aus dem Regressionsmodell lässt sich auch die Korrelation ableiten.
+# Zumindest im einfachsten Fall mit einem Kriterium und einem Prädiktor ist die 
+# Korrelation r die Wurzel aus dem R²
+sqrt(summary(lm(sc2mean ~ sc1mean, data = mydata_scales))[["r.squared"]])
+
+# Zum Vergleich
+corr.test(mydata_scales[,c("sc1mean", "sc2mean")])
+```
+
+## Die (einfache) lineare Regression
+
+```{r}
+# Regressionsergebnisse können wir uns mit der sjPlot-Bibliothek auch "publikationsfertig" ausgeben lassen
+mymodel <- lm(sc2mean ~ sc1mean, data = mydata_scales)
+tab_model(mymodel)
+
+#?tab_model
+```
+
+## Die (einfache) lineare Regression
+
+```{r}
+# Mit Hilfe der Optionen können wir das ganze noch anpassen
+tab_model(mymodel, show.std = T, file = "mytable.html")
+```
+
+## Die (einfache) lineare Regression
+
+```{r}
+# Das standardisierte Beta entspricht wieder der Korrelation
+# Zum Vergleich
+corr.test(mydata_scales[,c("sc1mean", "sc2mean")])
+
+```
+
+
+# Komplexere Gruppenvergleiche
+
+## Multiple Regression
+
+```{r}
+# Fragestellung: Unterscheidet sich der Anstieg des Interesses von Pre-
+# zu Post-Messung zwischen den Untersuchungsgruppen?
+#
+# Wie könnten wir vorgehen, um die Frage zu beantworten?
+``` 
+
+## Multiple Regression
+
+```{r}
+# Zunächst bestimmen wir die Kontraste
+contrasts(mydata_scales[["sozpos"]]) <- c(0,1)
+# Weiß noch jemand was das für unser Modell bedeutet?
+
+# Nullmodell zum Vergleich
+model0 <- lm(int2mean ~ 1, data = mydata_scales)
+
+# So sagen wir anhand der Gruppe den Wert zum Posttest vorher:
+model1 <- lm(int2mean ~ sozpos, data = mydata_scales)
+
+# So sagen wir anhand der Gruppe den anhand des Wertes zum Prä-Test
+# korrigierten Wert zum Posttest vorher:
+model2 <- lm(int2mean ~ sozpos + int1mean, data = mydata_scales)
+
+# Disclaimer: Man kann so vorgehen, besser wäre aber bei ausreichender Stichprobengröße
+# ein Mehrebenen-Modell! Dieses Beispiel ist nur zur Veranschaulichung.
+``` 
+
+## Multiple Regression
+
+```{r}
+summary(model0)
+# Interpretation?
+```
+
+## Multiple Regression
+
+```{r}
+summary(model0)
+# Interpretation: Der Mittelwert des Interesses (Post-Test) beträgt ca. 4.27.
+mean(mydata_scales[["int2mean"]], na.rm = T)
+```
+
+## Multiple Regression
+
+```{r}
+summary(model1)
+# Interpretation?
+```
+
+## Multiple Regression
+
+```{r}
+summary(model1)
+# Interpretation: Der Mittelwert des Interesses (Post-Test) in der low social position Gruppe (Referenzgruppe) beträgt ca. 4.21.
+# Für die high social position Gruppe wird darauf ca. 0.11 aufaddiert.
+```
+
+## Multiple Regression
+
+```{r}
+# Das stimmt auch mathematisch mit den Mitelwerten der Gruppen überein:
+mydata_scales |>
+  group_by(sozpos) |>
+  summarize(
+    mean_int2 = mean(int2mean)
+  )
+```
+
+
+## Multiple Regression
+
+```{r}
+summary(model2)
+# Interpretation?
+```
+
+## Multiple Regression
+
+```{r}
+summary(model2)
+# Interpretation: Wenn in1_mean 0 ist, ist der Erwartungswert für das Interesse beim Post-Test in der low social position Gruppe (Referenzgruppe) ca. -0.11.
+# Für jeden Punkt höher als 0 im Prä-Test Interesse werden darauf ca. 0.99 Punkt aufaddiert.
+# Für Personen in der high social position Gruppe werden zusätzlich ca. 0.28 aufaddiert.
+```
+
+## Multiple Regression
+
+```{r}
+# Erklärt das jeweils komplexere Modell die Daten 
+# wirklich besser als die jeweils einfacheren Modelle?
+# Oder: Steigt das R-Quadrat signifikant an?
+anova(model0, model1, model2)
+
+# In diesem Fall würde es naheliegen sich für model2 zu entscheiden.
+```
+
+## Übungsaufgabe
+
+- Führt die eben gezeigten Analysen mit dem Selbstkonzept durch und interpretiert die Ergebnisse
+
+## Lösung
+
+- Auf der nächsten Folie kommt die Lösung :)
+
+## Lösung
+
+```{r}
+# Nullmodell:
+model0sc <- lm(sc2mean ~ 1, data = mydata_scales)
+
+# Hier werden wieder die Post-Test Werte anhand der Gruppe
+# vorhergesagt:
+model1sc <- lm(sc2mean ~ sozpos, data = mydata_scales)
+# oder: model1sc <- update(model0sc, .~. + sozpos) 
+
+# Hier wird wieder für die Prä-Test Werte korrigiert:
+model2sc <- lm(sc2mean ~ sozpos + sc1mean, data = mydata_scales)
+# oder: model2sc <- update(model1sc, .~. + sc1mean)
+
+```
+
+## Lösung - Modell 0
+
+```{r}
+summary(model0sc)
+# Interpretation: Der Mittelwert im Selbstkonzept (Post-Test) beträgt ca. 4
+# über beide Gruppen hinweg.
+```
+
+
+## Lösung - Modell 1
+
+```{r}
+summary(model1sc)
+```
+
+## Lösung - Modell 2
+
+```{r}
+summary(model2sc)
+```
+
+## Lösung - Modellvergleiche
+
+```{r}
+anova(model0sc, model1sc, model2sc)
+```
+
+## Darstellung verschiedener Modelle in einer Tabelle
+```{r}
+#| eval: false
+
+# Die sjPlot-Bibliothek kann auch mehrere Modelle in einer Tabelle darstellen
+tab_model(model2, model2sc, show.std = T, file = "mytable2.html")
+
+tab_model(model0, model1, model2, file = "mytable3.html")
+
+```
+
+# Kleiner Ausblick: Mehrebenenregression
+
+## Mehrebenenregression
+
+```{r}
+#| eval: false
+
+# Für Mehrebenenanalysen benötigen wir wieder eine neue Bibliothek: nlme
+install.packages("nlme")
+
+```
+
+## Mehrebenenregression
+
+```{r}
+
+library(nlme)
+
+# Und wir müssen die Daten als Vorbereitung vom wide- ins long-Format bringen
+mydata_ml <- mydata_scales |>
+  pivot_longer(cols = c(sc1mean, sc2mean), names_to = "mt", values_to = "sc", names_transform = as.factor)
+
+contrasts(mydata_ml[["mt"]])
+
+```
+
+## Mehrebenenregression
+
+```{r}
+#| eval: false
+
+# So sieht das Random-Intercept-Modell aus:
+mymodel_ml <- lme(sc ~ sozpos*mt, data = mydata_ml, random = ~1|UserID)
+
+tab_model(mymodel_ml)
+# Bei einer Person mit Gruppe 0 und Messzeitpunkt 0 (negativer sozialer Vergleich und Prä-Test) erwarten wir 
+# ein Selbstkonzept von 4.12
+# Bei Gruppe 0 (negativer sozialer Vergleich) sinkt der Wert von Prä- zu Post-Test um 0.40 Punkte
+# Bei Gruppe 1 (positiver sozialer Vergleich) sind kaum Unterschiede zwischen Prä- und Post-Test zu finden (-.40 + 0.42)
+
+```
