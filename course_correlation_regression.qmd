@@ -15,6 +15,8 @@ execute:
 
 - Erstellt ein R-Skript für den heutigen Workshop
 
+- Erstellt in dem Projekt-Ordner einen neuen Ordner mit dem Namen dateien und speichert den Datensatz gleich dort
+
 ## Daten herunterladen
 
 [Hier klicken um den Datensatz runterzuladen](dateien/experiment_data.rds){target="_blank"}
@@ -23,6 +25,8 @@ execute:
 
 ```{r}
 # Lest zunächst den Datensatz ein...
+#download.file(file.path("https://jannisbosch.github.io/R-Tutorial/dateien/experiment_data.rds"), destfile = file.path("dateien", "experiment_data.rds"))
+
 mydata <- readRDS(file.path("dateien", "experiment_data.rds"))
 
 # ... und inspiziert ihn
